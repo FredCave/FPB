@@ -1,0 +1,13 @@
+{
+  "name": "x-bank",
+  "version": "1.0.0",
+  "description": "X-Bank website",
+  "repository" : { 
+    "type" : "git", 
+    "url" : "https://github.com/FredCave/x-bank.git"
+    },
+  "devDependencies" : {
+    "grunt-contrib-uglify": "^0.11.0",
+    "grunt-contrib-watch": "^0.6.1"
+  }
+}
