@@ -1,10 +1,10 @@
 {
-  "name": "x-bank",
+  "name": "proyecto-bachué",
   "version": "1.0.0",
-  "description": "X-Bank website",
+  "description": "Proyecto Bachué website",
   "repository" : { 
     "type" : "git", 
-    "url" : "https://github.com/FredCave/x-bank.git"
+    "url" : "git@github.com:FredCave/Proyecto-Bachue.git"
     },
   "devDependencies" : {
     "grunt-contrib-uglify": "^0.11.0",
