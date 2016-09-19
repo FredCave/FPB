@@ -5,9 +5,11 @@
 			1.1. SECTION LOADER
 			1.2. IMAGE GRID HEIGHT CHECK
 			1.3. IMAGE GRID TOGGLE  			
-		2.	 NEWS
-			2.1. NEWS IMAGES PLACEMENT
-			2.2. NEWS IMAGE HOVER
+		2. 	NAV
+			2.1. GLOBAL NAV FUNCTION
+		3.	 NEWS
+			3.1. NEWS IMAGES PLACEMENT
+			3.2. NEWS IMAGE HOVER
 			X.X. BOTTOM HEADER SCROLL
 
 *****************************************************************************/
@@ -15,38 +17,40 @@
 var winH = $(window).height()
 	winW = $(window).width();
 
+/****************************************************************************
+    
+	1. GENERAL
+
+*****************************************************************************/
+
 // 1.1. SECTION LOADER
 
-// STORE LAST LOADED SECTION
-var lastLoaded = 0;
-function sectionLoader ( scroll ) {
+function sectionCheck ( scroll ) {
+	var lastLoaded = parseInt( $("#wrapper").attr("data-loaded") );
 	// IF ALL LOADED
-	if ( lastLoaded > 3 ) {
+	console.log( 31, lastLoaded );
+	if ( lastLoaded > 4 ) {
+		console.log( 33, "All sections loaded." );
 		return false;
 	} else {
-		console.log("sectionLoader");
+		console.log( "sectionCheck", lastLoaded );
 		// CHECK HOW CLOSE TO END OF LASTLOADED
-		var target = $("section").eq(lastLoaded);
+		var target = $("section").eq( lastLoaded - 1 );
 		var lastTop = target.offset().top;
 		var lastEnd = lastTop + target.height();
-		console.log( lastLoaded, target.attr("id"), lastTop );
 		//console.log( lastLoaded, lastTop, lastEnd, scroll, "limit: ", lastEnd - ( scroll + winH ) );
-		if ( ( lastEnd - ( scroll + winH ) ) < ( winH / 2 ) && lastLoaded <= 3 ) {
-			console.log("load");
+		if ( ( lastEnd - ( scroll + winH ) ) < ( winH / 2 ) && lastLoaded <= 4 ) {
 			// LOAD HERE 
+			console.log( 44 );
 			sectionLoad( lastLoaded );
-			// UPDATE LASTLOADED
-			lastLoaded += 1;
-			console.log( 26, lastLoaded );
 		} 		
 	}
-
 }
 
 // 1.2. IMAGE GRID HEIGHT CHECK
 
 function gridHeight () {
-	console.log("gridCheck");
+	console.log("gridHeight");
 	// LOOP THROUGH ALL GRIDS
 	$(".image_grid").each( function(){
 		// INITIAL HEIGHT = 15vw
@@ -58,7 +62,7 @@ function gridHeight () {
 			// CHECK IF IMAGES HAVE LOADED
 			var thisCell = $(this);
 			$(this).imagesLoaded().done( function(){
-				console.log( 60, thisCell.find(".image_small img").height() );
+				// console.log( 60, thisCell.find(".image_small img").height() );
 				thisCell.find(".image_small").children().each( function(){
 					cellH += $(this).outerHeight() + 24;
 				});
@@ -68,7 +72,7 @@ function gridHeight () {
 				}
 			});
 		});
-		console.log( 63, gridCellH );
+		// console.log( 63, gridCellH );
 		// SET ALL CELL HEIGHTS
 		$(this).find(".image_small").css( "height", gridCellH );
 	});
@@ -90,67 +94,78 @@ function gridClose ( click ) {
 	click.parents(".image_grid").find(".expanded").removeClass("expanded").addClass("collapsed");
 }
 
+/****************************************************************************
+    
+	2. NAV
 
-// 2.1. PLACEMENT OF NEWS IMAGES
+*****************************************************************************/
 
-function newsImages () {
-	console.log("newsImages");
-	// CREATE INTERVALS BASED ON NUMBER OF IMAGES
-	// BETWEEN 5% & 65%
-	var noImgs = $("#news_list li").length,
-		interval = 60 / noImgs,
-		intervals = [],
-		thisLeft,
-		thistop;
-	for ( var i = 1; i <= noImgs; i++ ) {
-		intervals.push( interval * i + 5 );
+// 2.1. GENERAL NAV FUNCTION
+
+	function navScroll ( target ) {
+		console.log( "navScroll", target );
+		var scrollPoint = $(target).offset().top,
+			scrollOffset = -120;
+		if ( scrollPoint !== 0 ) {
+			console.log( 110, scrollPoint, "Scroll." );
+			$("html,body").animate({
+				scrollTop : scrollPoint + scrollOffset
+			}, 1000 );
+		} else {
+			console.log( 115, "Keep trying.", scrollPoint );
+			setTimeout( function(){
+				navScroll( target ); 	
+			}, 500 );
+		}
+
 	}
-	console.log( 47, noImgs, interval, intervals );
-	// ASSIGN INTERVALS WITH SLIGHT RANDOM MODIFICATION
-	$("#news_list li").each( function(i){
-		thisLeft = intervals[intervals.length-(i+1)] * ( Math.random() * 0.9 + 0.1 );
-		thisTop = ( intervals[i] - 20 ) * ( Math.random() * 0.9 + 0.1 ); // REDUCED BY 20 SO THAT MAX IS 40
-		console.log( 57, thisLeft, thisTop );
-		$(this).css({
-			"top" : thisTop + "%",
-			"left" : thisLeft + "%"
-		});
 
-	});
-	// FADE IN IMAGES
-	$(".news_post").animate({
-		"opacity": 1
-	}, 500);
-}
+	function navManager ( target, id ) {
+		console.log("navManager", target, id);
+		if ( $(target).length ) {
+			// IF LOADED
+			navScroll( target );
+		} else {
+			// NOT LOADED
+			console.log( 109, "Target is not loaded." );
+			// COUNT HOW MANY SECTIONS ARE LOADED
+			var loaded = parseInt( $("#wrapper").attr("data-loaded") ),
+				targetId = parseInt(id);
+			// LOOP UP UNTIL TARGET SECTION
+			while ( loaded <= targetId ) {
+				sectionLoad( loaded );
+				loaded++;
+			}
+			// ON AJAX READY EVENT: SCROLL
+			console.log( 133, target );
+			$("#wrapper").on( "ajax_ready", function(e){
+				console.log("Ajax loaded. Ready to scroll.", target);
+				navScroll( target );
+			});		
+		}
+	}
 
-// 2.2. NEWS IMAGES HOVER
-
-function newsHover ( news_post ) {
-	console.log("newsHover");
-	var currZ = parseInt( news_post.css("z-index") );
-	news_post.css( "z-index", currZ + 1 ).siblings().css( "z-index", "1" );
-}
-
-// BOTTOM HEADER SCROLL
+// 2.2. BOTTOM HEADER SCROLL
 
 function bottomHeader ( scroll ) {
 	var topH = $("#top_header").outerHeight();
 	if ( scroll < winH - ( topH + $("#bottom_header").outerHeight() ) ) {
-		// console.log("bottomHeader", scroll);
+		// NORMAL SCROLLING
 		$("#bottom_header").css({
-			"bottom": scroll,
-			"top": ""
+			"position" : "absolute",
+			"top" : ""
 		});
 			// LOGO 
 		if ( scroll > winH - ( topH + $("#main_logo").outerHeight() ) ) {
-			// console.log("Logo fixed.", scroll);
+			// LOGO FIXED
 			$("#main_logo").css({
 				"position" : "fixed",
 				"top": topH,
 				"bottom": "inherit",
-				"left": "1px"
+				"left": ""
 			});
 		} else {
+			// LOGO NORMAL SCROLL
 			$("#main_logo").css({
 				"position" : "",
 				"top": "",
@@ -159,14 +174,59 @@ function bottomHeader ( scroll ) {
 			});		
 		}
 	} else {
-		// console.log("bottomHeader fixed.", scroll);
+		// FIXED AT TOP
 		$("#bottom_header").css({
-			"top": topH,
-			"bottom": "inherit"
+			"position" : "fixed",
+			"top": topH
 		});		
 	}
 
 }
 
+/****************************************************************************
+    
+	2. NEWS
+
+*****************************************************************************/
+
+// 3.1. PLACEMENT OF NEWS IMAGES
+
+// function newsImages () {
+// 	console.log("newsImages");
+// 	// CREATE INTERVALS BASED ON NUMBER OF IMAGES
+// 	// BETWEEN 5% & 65%
+// 	var noImgs = $("#news_list li").length,
+// 		interval = 60 / noImgs,
+// 		intervals = [],
+// 		thisLeft,
+// 		thistop;
+// 	for ( var i = 1; i <= noImgs; i++ ) {
+// 		intervals.push( interval * i + 5 );
+// 	}
+// 	// console.log( 47, noImgs, interval, intervals );
+// 	// ASSIGN INTERVALS WITH SLIGHT RANDOM MODIFICATION
+// 	$("#news_list li").each( function(i){
+// 		thisLeft = intervals[intervals.length-(i+1)] * ( Math.random() * 0.9 + 0.1 );
+// 		thisTop = ( intervals[i] - 20 ) * ( Math.random() * 0.9 + 0.1 ); // REDUCED BY 20 SO THAT MAX IS 40
+// 		// console.log( 57, thisLeft, thisTop );
+// 		$(this).css({
+// 			"top" : thisTop + "%",
+// 			"left" : thisLeft + "%"
+// 		});
+
+// 	});
+// 	// FADE IN IMAGES
+// 	$(".news_post").animate({
+// 		"opacity": 1
+// 	}, 500);
+// }
+
+// 3.2. NEWS IMAGES HOVER
+
+// function newsHover ( news_post ) {
+// 	console.log("newsHover");
+// 	var currZ = parseInt( news_post.css("z-index") );
+// 	news_post.css( "z-index", currZ + 1 ).siblings().css( "z-index", "1" );
+// }
 
 

@@ -1,4 +1,4 @@
-<div id="archivo" class="wrapper">
+<div id="noticias" class="wrapper">
 	
 	<!-- FILTER HERE -->
 

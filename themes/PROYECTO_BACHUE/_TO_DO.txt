@@ -1,0 +1,54 @@
+/************************************************
+    IN PROGRESS
+************************************************/
+
+### NAV SCROLL FOR NOT YET LOADED SECTIONS
+
+/************************************************
+    TO DO
+************************************************/
+
+### ENGLISH / SPANISH
+
+### GOOGLE IMAGE FUNCTIONALITY
+
+### COLLECTION FILTER
+	* SEARCH AUTO-COMPLETE
+
+### PASSWORD FOR COLLECTION
+
+### SMARTPHONE MENU
+
+### GET REAL FONT
+
+### MEDIA QUERIES
+
+### OPTIMISATION
+
+### FAVICON
+
+### ADD LINK TO EMAIL
+
+### It would be nice to make the image of the publication a direct link to it's information
+
+	* IS FIRST BANNER NECESSARY?
+
+### The last image in the Botero book doesn't show completely.
+
+### ARCHIVE Should the title be also the link to the original source? – SEE EMAIL
+
+### ARCHIVE Each piece should show the tags…so a visitor can search, no? – SEE EMAIL
+
+### New section called Exposiciones exhibitons This will have the title of the exhibition, a text, and images of the exhibition. I think that for now we can use the publication layout... just to see how it works and from there modify for the content. Each exhibition will have at least 5 to 10 images.
+
+### Noticias doesn't work
+
+
+
+/************************************************
+    COMPLETED
+************************************************/
+
+### LOADING ANIMATION FOR SECTIONS
+
+### BOTTOM NAV IMPROVE

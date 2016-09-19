@@ -55,14 +55,16 @@
 					<li class="pub_list_post">
 						<div class="large_left">
 							<div class="pub_list_title">
-								<h1>
-									<?php the_title();
-									if ( get_field( "publication_author" ) ) {
-										echo ", " . get_field( "publication_author" );
+								<h1><?php the_title(); ?></h1>
+								<p class="pub_list_author">
+									<?php if ( get_field( "publication_author" ) ) {
+										echo get_field( "publication_author" );
 									} ?>
-								</h1>
-								<h1><?php the_field( "publication_date" ); ?></h1>
+								</p>
 							</div>
+
+							<p class="pub_list_price">Precio: <?php the_field( "publication_price" ); ?> pesos COP</p>
+			
 							<div class="pub_list_text">
 								<?php the_field( "publication_text" ); ?>
 							</div>
@@ -88,37 +90,41 @@
 							?>
 						</div>
 
-						<?php if ( get_field("publication_spreads") && !$pdf ) { ?>
-							<!-- SPREADS - ONLY IF NO PDF -->
-							<ul class="pub_list_spreads image_grid">
-								<?php 
-								if ( have_rows( "publication_spreads" ) ) {	
-									while ( have_rows( "publication_spreads" ) ) : the_row( "publication_spreads" ); ?>
-										<li class="image_cell collapsed">
-											<div class="image_small">
-												<?php
-												$image = get_sub_field( "publication_spread" );
-												pb_image_object( $image, "image_cell_toggle" );
-												?>
-											</div>
-											<div class="image_large">
-												<div class="image_cell_close">
-													<img src="<?php bloginfo( 'template_url' ); ?>/img/close.svg" />
-												</div>
-												<div class="expanded_content">
+						<?php if ( !empty( get_field("publication_spreads") ) && !$pdf ) {
+							// DOUBLE CHECK: IF FIRST IMAGE FIELD IS EMPTY
+							echo get_field("publication_spreads")[0][1];
+							if ( get_field("publication_spreads")[0][1] ) { ?>
+								<!-- SPREADS - ONLY IF NO PDF -->
+								<ul class="pub_list_spreads image_grid">
+									<?php 
+									if ( have_rows( "publication_spreads" ) ) {	
+										while ( have_rows( "publication_spreads" ) ) : the_row( "publication_spreads" ); ?>
+											<li class="image_cell collapsed">
+												<div class="image_small">
 													<?php
 													$image = get_sub_field( "publication_spread" );
-													pb_image_object( $image );
+													pb_image_object( $image, "image_cell_toggle" );
 													?>
 												</div>
-											</div>
-										</li>
-									<?php
-									endwhile;
-								}
-								?>
-							</ul>
-						<?php } ?>
+												<div class="image_large">
+													<div class="image_cell_close">
+														<img src="<?php bloginfo( 'template_url' ); ?>/img/close.svg" />
+													</div>
+													<div class="expanded_content">
+														<?php
+														$image = get_sub_field( "publication_spread" );
+														pb_image_object( $image );
+														?>
+													</div>
+												</div>
+											</li>
+										<?php
+										endwhile;
+									}
+									?>
+								</ul>
+							<?php } // END OF DOUBLE CHECK
+							} ?>
 
 					</li>
 				<?php

@@ -1,5 +1,20 @@
 <?php
 
+// SECURITY: HIDE USERNAMES
+add_action(‘template_redirect’, ‘bwp_template_redirect’);
+function bwp_template_redirect() {
+    if ( is_author() ) {
+        wp_redirect( home_url() ); 
+        exit;
+    }
+}
+
+// HIDE VERSION OF WORDPRESS
+function wpversion_remove_version() {
+    return '';
+    }
+add_filter('the_generator', 'wpversion_remove_version');
+
 // ENQUEUE CUSTOM SCRIPTS
 function enqueue_cpr_scripts() {
   
@@ -71,16 +86,16 @@ function section_load () {
     if ( isset($_REQUEST) ) {
         $last_loaded = $_REQUEST['lastLoaded'];
         switch ( $last_loaded ) {
-            case 0:
+            case 1:
                 $source = "includes/02_about.php";
                 break;
-            case 1:
+            case 2:
                 $source = "includes/03_publications.php";
                 break;
-            case 2:
+            case 3:
                 $source = "includes/04_archive.php";
                 break;
-            case 3:
+            case 4:
                 $source = "includes/05_collection.php";
                 break;
         }

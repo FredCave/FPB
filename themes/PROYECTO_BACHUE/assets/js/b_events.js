@@ -13,6 +13,7 @@
 
 $( document ).ready(function() {
 
+
 // 1.1. INIT SMOOTHSCROLL
 
 	// $('a').smoothScroll({
@@ -21,14 +22,11 @@ $( document ).ready(function() {
 
 // 1.1. NAV CLICK
 
-	$('#bottom_header a').on( "click", function(e){
-		// IF NOT YET LOADED
+	$(document).on( "click", "#bottom_header a", function(e){
 		e.preventDefault();
-		var target = $(this).attr("href");
-		if ( !$(target).length ) {
-			console.log( 28, "Not loaded." );
-			
-		}
+		var target = $(this).attr("href"),
+			thisId = $(this).attr("data-id");
+		navManager( target, thisId );
 	});
 
 // 1.3. IMAGE GRID CLICK
@@ -45,22 +43,27 @@ $( document ).ready(function() {
 
 // 2.1. NEWS IMAGE HOVER
 	
-	$(".news_post").on( "mouseover", function(){
-		newsHover( $(this) );
-	});
+	// $(".news_post").on( "mouseover", function(){
+	// 	newsHover( $(this) );
+	// });
 
 // X.X. WINDOW EVENTS
 
 	var winScroll;
 
 	$(window).on("load", function(){
-		sectionLoader( 0 );
-		newsImages();
+		// RESET SCROLL
+		$("html, body").animate({
+			scrollTop : 0
+		}, 100 );
+		// LOAD ABOUT
+		sectionCheck( 0 );
+		// newsImages();
 		gridHeight();
 	}).on('scroll', _.throttle(function() {
 		winScroll = $(window).scrollTop();
-		sectionLoader( winScroll );
-	}, 500 )).on( "resize", function(){
+		sectionCheck( winScroll );
+	}, 1000 )).on( "resize", function(){
 		gridHeight();
 	});
 

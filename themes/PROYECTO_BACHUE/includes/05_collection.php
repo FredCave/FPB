@@ -1,4 +1,4 @@
-<div id="la-collecion" class="wrapper">
+<div id="la-coleccion" class="wrapper">
 	<ul id="collection_list" class="image_grid">
 		<?php 
 			$args = array(
@@ -57,6 +57,14 @@
 										// TECHNIQUE
 										if ( get_field( "coll_technique" ) ) {
 											echo "Técnica : " . get_field( "coll_technique" ) . "<br>";
+										}
+										// EXHIBITIONS
+										if ( get_field( "coll_exhibitions" ) ) { ?>
+											<p>Curadurías :</p>
+											<div>
+												<?php the_field( "coll_exhibitions" ); ?>
+											</div>
+										<?php
 										}
 										?>
 									</div>

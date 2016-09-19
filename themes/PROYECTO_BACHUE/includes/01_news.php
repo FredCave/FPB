@@ -1,6 +1,6 @@
 <div id="news_wrapper" class="wrapper">
 	<ul id="news_list">
-		<?php 
+		<?php /*
 			$args = array(
 				"post_type" 		=> "news",
 				"posts_per_page"	=> 4
@@ -32,6 +32,6 @@
 				endwhile;
 				wp_reset_postdata();
 			endif;
-		?>
+		*/ ?>
 	</ul>
 </div>
