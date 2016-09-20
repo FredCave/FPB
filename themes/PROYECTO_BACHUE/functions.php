@@ -93,10 +93,13 @@ function section_load () {
                 $source = "includes/03_publications.php";
                 break;
             case 3:
-                $source = "includes/04_archive.php";
+                $source = "includes/04_exposiciones.php";
                 break;
             case 4:
-                $source = "includes/05_collection.php";
+                $source = "includes/05_archive.php";
+                break;
+            case 5:
+                $source = "includes/06_collection.php";
                 break;
         }
         $new_data = include( $source );

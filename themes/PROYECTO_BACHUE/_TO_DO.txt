@@ -2,15 +2,49 @@
     IN PROGRESS
 ************************************************/
 
-### NAV SCROLL FOR NOT YET LOADED SECTIONS
+### GOOGLE IMAGE FUNCTIONALITY
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /************************************************
     TO DO
 ************************************************/
 
-### ENGLISH / SPANISH
+### UNDERLINE NAV LI WHEN SELECTED 
 
-### GOOGLE IMAGE FUNCTIONALITY
+### ENGLISH / SPANISH
 
 ### COLLECTION FILTER
 	* SEARCH AUTO-COMPLETE
@@ -44,10 +78,11 @@
 ### Noticias doesn't work
 
 
-
 /************************************************
     COMPLETED
 ************************************************/
+
+### NAV SCROLL FOR NOT YET LOADED SECTIONS
 
 ### LOADING ANIMATION FOR SECTIONS
 

@@ -1,4 +1,8 @@
-<div id="publicaciones" class="wrapper">
+<div id="exposiciones" class="wrapper">
+
+	TEST
+
+	<?php /*
 
 	<!-- INTRO TEXT -->
 	<div class="col_1 col">
@@ -63,23 +67,19 @@
 								</p>
 							</div>
 
-							<?php if ( get_field( "publication_price" ) ) : ?>
-								<p class="pub_list_price">Precio: <?php the_field( "publication_price" ); ?> pesos COP</p>
-							<?php endif; ?>
+							<p class="pub_list_price">Precio: <?php the_field( "publication_price" ); ?> pesos COP</p>
 			
 							<div class="pub_list_text">
 								<?php the_field( "publication_text" ); ?>
 							</div>
 
-							<?php 
-							// RESET $PDF VARIABLE
-							$pdf = "";
-							if ( get_field("publication_pdf") ) { ?>
+							<?php if ( get_field("publication_pdf") ) { ?>
 								<!-- LINK -->
 								<?php 
 								$pdf = get_field("publication_pdf");
 								$pdf_link = $pdf["url"];
 								$pdf_name = $pdf["filename"];
+
 								?>
 								<a href="<?php echo $pdf_link; ?>" target="_blank">
 									<?php echo $pdf_name; ?>
@@ -94,15 +94,16 @@
 							?>
 						</div>
 
-						<?php // SPREADS - ONLY IF NO PDF -->
-						if ( get_field("publication_spreads") && !$pdf ) {
+						<?php if ( !empty( get_field("publication_spreads") ) && !$pdf ) {
 							// DOUBLE CHECK: IF FIRST IMAGE FIELD IS EMPTY
-							if ( get_field("publication_spreads")[0]['publication_spread'] ) { ?>
+							echo get_field("publication_spreads")[0][1];
+							if ( get_field("publication_spreads")[0][1] ) { ?>
+								<!-- SPREADS - ONLY IF NO PDF -->
 								<ul class="pub_list_spreads image_grid">
 									<?php 
 									if ( have_rows( "publication_spreads" ) ) {	
 										while ( have_rows( "publication_spreads" ) ) : the_row( "publication_spreads" ); ?>
-											<li class="image_cell">
+											<li class="image_cell collapsed">
 												<div class="image_small">
 													<?php
 													$image = get_sub_field( "publication_spread" );
@@ -110,6 +111,15 @@
 													?>
 												</div>
 												<div class="image_large">
+													<div class="image_cell_close">
+														<img src="<?php bloginfo( 'template_url' ); ?>/img/close.svg" />
+													</div>
+													<div class="expanded_content">
+														<?php
+														$image = get_sub_field( "publication_spread" );
+														pb_image_object( $image );
+														?>
+													</div>
 												</div>
 											</li>
 										<?php
@@ -128,6 +138,6 @@
 		</ul>
 	</div>
 
-
+	*/ ?>
 
 </div>

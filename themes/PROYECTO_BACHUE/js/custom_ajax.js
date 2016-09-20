@@ -13,7 +13,7 @@ function sectionLoad ( last ) {
                 data = data.slice(0, -1);
             }
             var animation = $('<div class="loading"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>');
-            if ( last >= 4 ) {
+            if ( last >= 5 ) {
                 // IF LAST SECTION NO ANIMATION
                 animation = $("");
                 // REDUCE #WRAPPER BOTTOM PADDING
@@ -26,11 +26,11 @@ function sectionLoad ( last ) {
             // EXTRA FUNCTIONS ON LOAD
                 // TO DO: NEED TO WAIT UNITL IMAGES HAVE LOADED
             gridHeight();
-            // TRIGGER EVENT ONCE DATA HAS LOADED
-            $("#wrapper").trigger("ajax_ready");
             // UPDATE LASTLOADED
             last += 1;
             $("#wrapper").attr( "data-loaded", last );
+            // TRIGGER EVENT ONCE DATA HAS LOADED
+            $("#wrapper").trigger("ajax_ready");
         },
         error: function(errorThrown){
             console.log(errorThrown);

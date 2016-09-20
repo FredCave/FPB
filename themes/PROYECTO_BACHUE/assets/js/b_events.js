@@ -13,13 +13,6 @@
 
 $( document ).ready(function() {
 
-
-// 1.1. INIT SMOOTHSCROLL
-
-	// $('a').smoothScroll({
-	// 	offset: -60
-	// });
-
 // 1.1. NAV CLICK
 
 	$(document).on( "click", "#bottom_header a", function(e){

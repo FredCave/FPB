@@ -28,9 +28,7 @@ var winH = $(window).height()
 function sectionCheck ( scroll ) {
 	var lastLoaded = parseInt( $("#wrapper").attr("data-loaded") );
 	// IF ALL LOADED
-	console.log( 31, lastLoaded );
-	if ( lastLoaded > 4 ) {
-		console.log( 33, "All sections loaded." );
+	if ( lastLoaded > 5 ) {
 		return false;
 	} else {
 		console.log( "sectionCheck", lastLoaded );
@@ -39,7 +37,7 @@ function sectionCheck ( scroll ) {
 		var lastTop = target.offset().top;
 		var lastEnd = lastTop + target.height();
 		//console.log( lastLoaded, lastTop, lastEnd, scroll, "limit: ", lastEnd - ( scroll + winH ) );
-		if ( ( lastEnd - ( scroll + winH ) ) < ( winH / 2 ) && lastLoaded <= 4 ) {
+		if ( ( lastEnd - ( scroll + winH ) ) < ( winH / 2 ) && lastLoaded <= 5 ) {
 			// LOAD HERE 
 			console.log( 44 );
 			sectionLoad( lastLoaded );
@@ -62,7 +60,7 @@ function gridHeight () {
 			// CHECK IF IMAGES HAVE LOADED
 			var thisCell = $(this);
 			$(this).imagesLoaded().done( function(){
-				// console.log( 60, thisCell.find(".image_small img").height() );
+				console.log( 60, thisCell.find(".image_small img").height() );
 				thisCell.find(".image_small").children().each( function(){
 					cellH += $(this).outerHeight() + 24;
 				});
@@ -82,16 +80,12 @@ function gridHeight () {
 
 function gridOpen ( click ) {
 	console.log("gridOpen");
-	// ADD EXPANDED CLASS TO CLICKED IMAGE
-	click.parents(".image_cell").removeClass("collapsed").addClass("expanded").siblings().removeClass("expanded").addClass("collapsed");	
-	// GET IMAGE TO FALL BELOW TALLEST IN ROW
-	// CALCULATE DISTANCE TO LEFT
+
 }
 
 function gridClose ( click ) {
 	console.log("gridClose");
 	// REMOVE ALL EXPANDED CLASSES
-	click.parents(".image_grid").find(".expanded").removeClass("expanded").addClass("collapsed");
 }
 
 /****************************************************************************
@@ -106,7 +100,7 @@ function gridClose ( click ) {
 		console.log( "navScroll", target );
 		var scrollPoint = $(target).offset().top,
 			scrollOffset = -120;
-		if ( scrollPoint !== 0 ) {
+		if ( scrollPoint != 0 ) {
 			console.log( 110, scrollPoint, "Scroll." );
 			$("html,body").animate({
 				scrollTop : scrollPoint + scrollOffset
@@ -117,11 +111,12 @@ function gridClose ( click ) {
 				navScroll( target ); 	
 			}, 500 );
 		}
-
 	}
 
 	function navManager ( target, id ) {
 		console.log("navManager", target, id);
+		// PRIMED SWITCH SO ONLE ONE AJAX READY EVENT IS FIRED PER CLICK
+		var primed = true;
 		if ( $(target).length ) {
 			// IF LOADED
 			navScroll( target );
@@ -137,10 +132,15 @@ function gridClose ( click ) {
 				loaded++;
 			}
 			// ON AJAX READY EVENT: SCROLL
-			console.log( 133, target );
 			$("#wrapper").on( "ajax_ready", function(e){
-				console.log("Ajax loaded. Ready to scroll.", target);
-				navScroll( target );
+				// CHECK IF PRIMED
+				if ( primed ) {
+					console.log("Ajax loaded. Ready to scroll.", target, loaded, primed);
+					setTimeout( function(){
+						navScroll( target );	
+					}, 200 );
+					primed = false;
+				}
 			});		
 		}
 	}
