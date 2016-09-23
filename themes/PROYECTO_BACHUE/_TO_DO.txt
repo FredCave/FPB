@@ -3,7 +3,7 @@
 ************************************************/
 
 ### GOOGLE IMAGE FUNCTIONALITY
-
+	### GRID HEIGHT NEEDS FIXING
 
 
 

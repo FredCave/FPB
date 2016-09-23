@@ -98,7 +98,7 @@
 						if ( get_field("publication_spreads") && !$pdf ) {
 							// DOUBLE CHECK: IF FIRST IMAGE FIELD IS EMPTY
 							if ( get_field("publication_spreads")[0]['publication_spread'] ) { ?>
-								<ul class="pub_list_spreads image_grid">
+								<ul class="pub_list_spreads image_grid" data-col="4" >
 									<?php 
 									if ( have_rows( "publication_spreads" ) ) {	
 										while ( have_rows( "publication_spreads" ) ) : the_row( "publication_spreads" ); ?>
@@ -108,8 +108,6 @@
 													$image = get_sub_field( "publication_spread" );
 													pb_image_object( $image, "image_cell_toggle" );
 													?>
-												</div>
-												<div class="image_large">
 												</div>
 											</li>
 										<?php

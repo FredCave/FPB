@@ -52,18 +52,27 @@ $( document ).ready(function() {
 		// LOAD ABOUT
 		sectionCheck( 0 );
 		// newsImages();
-		gridHeight();
+		gridManager();
 	}).on('scroll', _.throttle(function() {
 		winScroll = $(window).scrollTop();
 		sectionCheck( winScroll );
-	}, 1000 )).on( "resize", function(){
-		gridHeight();
-	});
+	}, 1000 )).on( "resize", _.throttle(function(){
+		$(".image_grid").each( function(){
+			rowHeight ( $(this) );
+		});
+	}, 500 ));
 
-	// SEPARATE SCROLL EVENT JUST FOR BOTTOM HEADER
+	// SEPARATE UNTHROTTLED SCROLL EVENT JUST FOR BOTTOM HEADER
 	$(window).on( "scroll", function(){
 		winScroll = $(window).scrollTop();
 		bottomHeader( winScroll );
+	});
+
+	// STOP SCROLL ANIMATIONS ON MANUAL SCROLL
+
+	var page = $("html, body");
+	page.on("scroll mousedown wheel DOMMouseScroll mousewheel keyup touchmove", function(){
+		page.stop();
 	});
 
 	var first = true;
@@ -71,18 +80,18 @@ $( document ).ready(function() {
 		console.log("mql");
 	    if ( mql.s.matches ) {
 	        // LESS THAN 600PX WIDE     
-	        
+	        gridManager();
 	    } else if ( mql.m.matches ) {
 	        // MORE THAN 600PX WIDE
-					
+			gridManager();		
 	    } else {
 	    	// MORE THAN 900PX WIDE
-			
+			gridManager();
 	    }
 	}
 
 	var mql = {};
-	mql.s = window.matchMedia("(max-width: 660px)");
+	mql.s = window.matchMedia("(max-width: 600px)");
 	mql.m = window.matchMedia("(max-width: 900px)");
 	mql.s.addListener(function(){
 		handleMediaChange(mql);

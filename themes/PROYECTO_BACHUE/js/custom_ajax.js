@@ -24,8 +24,7 @@ function sectionLoad ( last ) {
             // ADD DATA + FADE IN
             $( "#section_" + ( last + 1 ) ).html( data ).append( animation ).delay(200).fadeIn(2000);
             // EXTRA FUNCTIONS ON LOAD
-                // TO DO: NEED TO WAIT UNITL IMAGES HAVE LOADED
-            gridHeight();
+            gridManager();
             // UPDATE LASTLOADED
             last += 1;
             $("#wrapper").attr( "data-loaded", last );

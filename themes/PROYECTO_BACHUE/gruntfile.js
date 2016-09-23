@@ -19,7 +19,7 @@ module.exports = function ( grunt ) {
 			grunt: { files: ['gruntfile.js'] },
 			css: { 
 				files: ['assets/css/*.css'], 
-				tasks: [ "cssmin:dist", "usebanner:taskName" ]
+				tasks: [ "cssmin:dist" ]
 			}
 		},
 		imagemin: {                          
@@ -46,22 +46,6 @@ module.exports = function ( grunt ) {
 					'style.min.css': ['assets/css/*.css']
 				}
 			}
-		},
-		usebanner: {
-			taskName: {
-				options: {
-					position: 'top',
-					banner: '/* ' + 
-							'	Theme Name: PROYECTO BACHUE \n ' +
-							'	Author: Fred Cave \n ' +
-							'	Version: <%= grunt.template.today("dd-mm-yyyy") %> \n' +
-							'*/',
-					linebreak: true
-				},
-				files: {
-					src: [ 'style.min.css' ]
-				}
-			}
 		}
 	});
 
@@ -69,7 +53,6 @@ module.exports = function ( grunt ) {
 	grunt.loadNpmTasks("grunt-contrib-uglify");
 	grunt.loadNpmTasks("grunt-contrib-watch");
 	grunt.loadNpmTasks("grunt-contrib-cssmin");
-	grunt.loadNpmTasks("grunt-banner");
 	grunt.loadNpmTasks('grunt-contrib-imagemin');
 
 	// Register tasks

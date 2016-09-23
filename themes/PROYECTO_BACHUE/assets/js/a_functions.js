@@ -3,7 +3,7 @@
 	FUNCTIONS
 		1.	 GENERAL
 			1.1. SECTION LOADER
-			1.2. IMAGE GRID HEIGHT CHECK
+			1.2. IMAGE GRID MANAGER
 			1.3. IMAGE GRID TOGGLE  			
 		2. 	NAV
 			2.1. GLOBAL NAV FUNCTION
@@ -45,41 +45,129 @@ function sectionCheck ( scroll ) {
 	}
 }
 
-// 1.2. IMAGE GRID HEIGHT CHECK
+// 1.2. IMAGE GRID MANAGER
 
-function gridHeight () {
-	console.log("gridHeight");
+	// GRID MANAGER
+	// RUNS ON AJAX LOAD + MEDIA QUERY RESIZE
+
+function gridManager () {
+	console.log("gridManager");
 	// LOOP THROUGH ALL GRIDS
 	$(".image_grid").each( function(){
-		// INITIAL HEIGHT = 15vw
-		var gridCellH = winW * 0.15;
-		// GET HEIGHT OF BIGGEST CELL 
-		// NEEDS IMPROVING – BY ROW
+		var cols = $(this).data("col");
+		// RESET
+		$(this).find(".clear").remove();
+		// LOOP THROUGH CELLS 
+		var count = 1,
+			row = 1;
+		// START FIRST ROW SPAN
 		$(this).find(".image_cell").each( function(){
-			var cellH = 0;
-			// CHECK IF IMAGES HAVE LOADED
-			var thisCell = $(this);
-			$(this).imagesLoaded().done( function(){
-				console.log( 60, thisCell.find(".image_small img").height() );
-				thisCell.find(".image_small").children().each( function(){
-					cellH += $(this).outerHeight() + 24;
-				});
-				// console.log( 54, cellH );
-				if ( cellH > gridCellH ) {
-					gridCellH = cellH;
-				}
-			});
+			$(this).attr( "data-row", row );
+			if ( count == cols ) {
+				// ADD CLEAR DIV
+				$(this).after("<div class='clear'></div><span class='grid_large'></span>");
+				count = 1;
+				row++;
+			}
+			count++;
 		});
-		// console.log( 63, gridCellH );
-		// SET ALL CELL HEIGHTS
-		$(this).find(".image_small").css( "height", gridCellH );
+		// RUN ROW HEIGHT ON THIS GRID
+		rowHeight( $(this) );
 	});
+}
+
+	// ROW HEIGHT
+
+function getCellHeight ( input ) {
+	console.log("getCellHeight");
+	var thisH = input.find(".image_small").outerHeight();
+	if ( thisH > 0 && thisH !== null ) {
+		console.log( 84, thisH );
+		return thisH;
+	} else {
+		setTimeout( function(){
+			getCellHeight( input );
+		}, 500);
+	}
+}
+
+function getRowHeight ( i ) {
+	console.log("getRowHeight");
+	var maxHeight = 0;		
+	// LOOP THROUGH CELLS
+	$( "li[data-row=" + i + "]").each( function(){
+		var thisH = getCellHeight( $(this) )
+		if ( thisH > maxHeight ) {
+			maxHeight = thisH;
+		}					
+	});
+	return maxHeight;
+}
+
+function setRowHeight ( i ) {
+	console.log("setRowHeight");
+	if ( getRowHeight(i) > 0 ) {
+		console.log( 119, getRowHeight(i) );
+		$( "li[data-row=" + i + "]" ).find(".image_small").css({
+			"height" : getRowHeight(i)
+		});			
+	} else {
+		console.log( 124, "Try again." );
+		setTimeout( function(){
+			setRowHeight(i);	
+		}, 500 );
+	}
+}
+
+function rowHeight ( grid ) {
+	console.log("rowHeight");
+	grid.imagesLoaded().always( function( instance, image ){
+		console.log( 99, "Images loaded." );
+		// GET NUMBER OF ROWS
+		var rows = parseInt( grid.find(".image_cell:last-child").attr("data-row") ),
+			i = 1;			
+		// LOOP THROUGH ROWS
+		while ( i <= rows ) {
+			setRowHeight( i );
+			i++;	
+		}	
+	});
+
 }
 
 // 1.3. IMAGE GRID TOGGLE
 
 function gridOpen ( click ) {
+	// CLICK == IMG TAG
 	console.log("gridOpen");
+	var grid = click.parents("ul");
+	// CALCULATE HOW MANY IMAGES IN ROW
+	var rowL = grid.data("col");
+	// CLOSE OTHER IMAGES
+	grid.find(".grid_large").css({
+		"height" : "0"
+	});
+
+	// CALCULATE HEIGHT OF GRID_LARGE
+	var imgW = parseInt( click.attr("width") ),
+		imgH = parseInt( click.attr("height") ),
+		colW = parseInt( grid.width() ),
+		largeH = imgH / imgW * colW;
+	if ( click.hasClass("portrait") ) {
+		// console.log( 100, largeH );
+		largeH = largeH * 0.67;
+		// console.log( 102, largeH );
+	} 
+
+	click.clone().appendTo( click.parents().siblings(".clear") );
+
+	// GIVE HEIGHT TO FOLLOWING GRID_LARGE
+	var rowNo = click.parents("li").attr("data-row");
+	console.log( 167, rowNo );
+	
+	grid.find( "span:nth-of-type(" + rowNo + ")" ).css({
+		"height" : largeH
+	});
 
 }
 

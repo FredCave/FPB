@@ -2,7 +2,7 @@
 	
 	<!-- FILTER HERE -->
 
-	<ul id="archive_list" class="image_grid">
+	<ul id="archive_list" class="__image_grid">
 		<?php 
 			$args = array(
 				"post_type" => "news"
@@ -19,7 +19,7 @@
 						MAIN TEXT
 					*/ ?>
 
-					<li class="archive_post image_cell collapsed">
+					<li class="archive_post __image_cell collapsed">
 						<!--
 						<div class="image_small">
 							<h1 class="image_cell_toggle"><?php the_title(); ?></h1>
