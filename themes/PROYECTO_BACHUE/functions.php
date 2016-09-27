@@ -19,10 +19,10 @@ add_filter('the_generator', 'wpversion_remove_version');
 function enqueue_cpr_scripts() {
   
     wp_deregister_script( 'jquery' );
-    // wp_register_script( 'jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js');
-    // wp_enqueue_script( 'jquery' );  
+    wp_register_script( 'jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js');
+    wp_enqueue_script( 'jquery' );  
     
-    wp_enqueue_script('jquery', get_template_directory_uri() . '/js/_jquery.js', true);
+//    wp_enqueue_script('jquery', get_template_directory_uri() . '/js/_jquery.js', true);
     wp_enqueue_script('all-scripts', get_template_directory_uri() . '/js/scripts.min.js', array('jquery'), true);
 
     wp_register_script( "custom_ajax", get_template_directory_uri() . '/js/custom_ajax.js', array('jquery') );
@@ -59,6 +59,18 @@ function create_post_types() {
         'has_archive' => true,
         'supports' => array('editor','title'),
         'menu_position' => 6
+        )
+    );
+    register_post_type( 'exhibitions',
+    array(
+        'labels' => array(
+            'name' => __( 'Exhibitions' )
+        ),
+        'public' => true,
+        'taxonomies' => array('category'),
+        'has_archive' => true,
+        'supports' => array('editor','title'),
+        'menu_position' => 7
         )
     );
     register_post_type( 'collection',
@@ -118,10 +130,10 @@ function pb_image_object( $image, $added_class ) {
     if( !empty($image) ): 
         $width = $image['sizes'][ 'thumbnail-width' ];
         $height = $image['sizes'][ 'thumbnail-height' ];
-        $thumb = $image['sizes'][ "thumbnail" ];
-        $medium = $image['sizes'][ "medium" ];
-        $large = $image['sizes'][ "large" ];
-        $full = $image['url'];
+        $thumb = $image['sizes'][ "thumbnail" ]; // 300
+        $medium = $image['sizes'][ "medium" ]; // 600
+        $large = $image['sizes'][ "large" ]; // 900
+        // $full = $image['url'];
         $id = $image["id"];
         
         $class = "landscape"; 
@@ -129,18 +141,17 @@ function pb_image_object( $image, $added_class ) {
             $class = "portrait";
             $thumb = $image['sizes'][ "medium" ];
             $medium = $image['sizes'][ "large" ];
-            $large = $image['url'];
+            $large = $image['url']; 
+            // FIX THIS – ADD EXTRA LARGE CUSTOM SIZE
         } 
 
         echo "<img class='" . $class . " " . $added_class . "' 
-        alt='Fundación Proyecto Bachué'  
-        data-src='" . $thumb . "' 
+        alt='Fundación Proyecto Bachué' 
         width='" . $width . "' 
         height='" . $height . "' 
-        data-sizes='auto' 
-        data-srcset='" . $large . " 1280w, 
-            " . $medium . " 800w, 
-            " . $thumb . " 300w' 
+        data-thm='" . $thumb . "' 
+        data-med='" . $medium . "' 
+        data-lrg='" . $large . "' 
         src=' " . $thumb . "' />";
     endif;
 }

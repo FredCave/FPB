@@ -1,5 +1,8 @@
 function sectionLoad ( last ) {
     console.log( "sectionLoad", last + 1 );
+    // UPDATE LASTLOADED TO PREVENT LOADING RUNNING TWICE
+    $("#wrapper").attr( "data-loaded", last + 1 );
+
     $.ajax({
         url: myAjax.ajaxurl,
         data: {
@@ -25,9 +28,9 @@ function sectionLoad ( last ) {
             $( "#section_" + ( last + 1 ) ).html( data ).append( animation ).delay(200).fadeIn(2000);
             // EXTRA FUNCTIONS ON LOAD
             gridManager();
-            // UPDATE LASTLOADED
-            last += 1;
-            $("#wrapper").attr( "data-loaded", last );
+            imageManager();
+            sectionMarkers(); // FOR NAV UNDERLINE
+
             // TRIGGER EVENT ONCE DATA HAS LOADED
             $("#wrapper").trigger("ajax_ready");
         },

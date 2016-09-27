@@ -4,9 +4,12 @@
 		1.	 GENERAL
 			1.1. SECTION LOADER
 			1.2. IMAGE GRID MANAGER
-			1.3. IMAGE GRID TOGGLE  			
+			1.3. IMAGE GRID TOGGLE  
+			1.4. LAZYLOADING 		
 		2. 	NAV
-			2.1. GLOBAL NAV FUNCTION
+			2.1. GLOBAL NAV 
+			2.2. BOTTOM HEADER SCROLL
+			2.3. NAV UNDERLINE
 		3.	 NEWS
 			3.1. NEWS IMAGES PLACEMENT
 			3.2. NEWS IMAGE HOVER
@@ -56,23 +59,26 @@ function gridManager () {
 	$(".image_grid").each( function(){
 		var cols = $(this).data("col");
 		// RESET
+		// IS THERE A BETTER WAY THAN REMOVING .GRID_LARGE??
 		$(this).find(".clear").remove();
+		$(this).find(".grid_large").remove();
 		// LOOP THROUGH CELLS 
 		var count = 1,
-			row = 1;
-		// START FIRST ROW SPAN
+			row = 1,
+			totalCells = $(this).find(".image_cell").length;
+		console.log( 64, totalCells );
 		$(this).find(".image_cell").each( function(){
 			$(this).attr( "data-row", row );
-			if ( count == cols ) {
-				// ADD CLEAR DIV
-				$(this).after("<div class='clear'></div><span class='grid_large'></span>");
-				count = 1;
+			// IF END OF THE ROW OR IF LAST CELL
+			if ( count % cols === 0 || count === totalCells ) {
+				// ADD CLEAR DIV + IMAGE WRAPPER
+				$(this).after("<div class='clear'></div><div class='grid_large row_" + row + "'><div class='image_wrapper'></div><div class='grid_close'></div></div>");
 				row++;
-			}
+			} 
 			count++;
 		});
 		// RUN ROW HEIGHT ON THIS GRID
-		rowHeight( $(this) );
+		// rowHeight( $(this) );
 	});
 }
 
@@ -138,9 +144,10 @@ function rowHeight ( grid ) {
 // 1.3. IMAGE GRID TOGGLE
 
 function gridOpen ( click ) {
-	// CLICK == IMG TAG
+	// CLICK == .IMAGE_SMALL
 	console.log("gridOpen");
-	var grid = click.parents("ul");
+	var grid = click.parents(".image_grid"),
+		img = click.find("img");
 	// CALCULATE HOW MANY IMAGES IN ROW
 	var rowL = grid.data("col");
 	// CLOSE OTHER IMAGES
@@ -149,31 +156,72 @@ function gridOpen ( click ) {
 	});
 
 	// CALCULATE HEIGHT OF GRID_LARGE
-	var imgW = parseInt( click.attr("width") ),
-		imgH = parseInt( click.attr("height") ),
+	var imgW = parseInt( img.attr("width") ),
+		imgH = parseInt( img.attr("height") ),
 		colW = parseInt( grid.width() ),
-		largeH = imgH / imgW * colW;
-	if ( click.hasClass("portrait") ) {
-		// console.log( 100, largeH );
+		largeH = imgH / imgW * colW * 0.9;
+	if ( img.hasClass("portrait") ) {
+		console.log( 162, largeH );
 		largeH = largeH * 0.67;
-		// console.log( 102, largeH );
+		console.log( 164, largeH );
 	} 
 
-	click.clone().appendTo( click.parents().siblings(".clear") );
+	// CLOSE ANY OPEN IMAGES IN GRID
+	// + ADD RESET CLASS
+	grid.find(".grid_large").css("height","0").find(".image_wrapper").empty().removeClass("full").addClass("empty");	
 
 	// GIVE HEIGHT TO FOLLOWING GRID_LARGE
 	var rowNo = click.parents("li").attr("data-row");
 	console.log( 167, rowNo );
 	
-	grid.find( "span:nth-of-type(" + rowNo + ")" ).css({
+	grid.find( ".row_" + rowNo ).css({
 		"height" : largeH
 	});
+
+	// CLONE IMAGE AND APPEND TO FOLLOWING .GRID_LARGE
+	img.clone().appendTo( grid.find( ".row_" + rowNo + " .image_wrapper" ) );
+	// RUN IMAGE RESIZE
+	imageManager( grid.find( ".row_" + rowNo + " img" ) );
+	// FADE IN
+	grid.find( ".row_" + rowNo ).removeClass("empty").addClass("full").find(".grid_close").fadeIn();
 
 }
 
 function gridClose ( click ) {
 	console.log("gridClose");
-	// REMOVE ALL EXPANDED CLASSES
+	// CLOSE PARENT
+	// + ADD RESET CLASS
+	click.fadeOut();
+	click.parents(".grid_large").css("height","0").find(".image_wrapper").empty().removeClass("full").addClass("empty");	
+}
+
+// 1.4. IMAGE LAZYLOAD
+
+function imageResizer ( img ) {
+	console.log("imageResizer");
+	// CHANGE POINTS: THM = 300 / MED = 600 / LRG = 900
+	if ( img.width() <= 300 ) {
+		img.attr( "src", img.attr("data-thm") );
+	} else if ( img.width() > 300 && img.width() <= 600 ) {
+		img.attr( "src", img.attr("data-med") );
+	} else {
+		img.attr( "src", img.attr("data-lrg") );
+	}
+}
+
+function imageManager ( img ) {
+	console.log("imageManager");
+	if (typeof img !== 'undefined') {
+		// RUN ON ONE IMAGE
+		console.log( 199, "Run on only one image." );
+		imageResizer( img );
+    } else {
+    	console.log( 196, "Run on all images.");
+		// LOOP THROUGH IMAGES
+		$("img").each( function(i){
+			imageResizer( $(this) );
+		});
+    }
 }
 
 /****************************************************************************
@@ -266,10 +314,53 @@ function bottomHeader ( scroll ) {
 		$("#bottom_header").css({
 			"position" : "fixed",
 			"top": topH
-		});		
+		});	
+		// RUN UNDERLINE FUNCTION	
+		navUnderline( scroll );
 	}
 
 }
+
+// 2.3. NAV UNDERLINE
+
+// CREATE EMPTY OBJECT TO HOLD START + END POINTS 
+var pb_sections = {};
+
+function sectionMarkers ( ) {
+	// RUNS ON AJAX LOAD + RESIZE
+	console.log( "sectionMarkers" );
+	// LOOP THROUGH SECTIONS
+	$("section").each( function(i){
+		var start = $(this).offset().top,
+			end  = start + $(this).height();
+		$(this).attr({
+			"data-start" : start, 
+			"data-end" : end
+		});
+		var section = {};
+		section._start = start;
+		section._end = end;
+		// APPEND OBJECT TO PB_SECTIONS
+		pb_sections[i] = section;
+	});
+	console.log( pb_sections );
+}
+
+function navUnderline ( scroll ) {
+	// console.log( "navUnderline", scroll );
+	// LOOP THROUGH PB_SECTIONS OBJECT
+	// for ( var i = 5; i >= 0; i-- ) {
+	// 	console.log( 350, i, scroll );
+	// 	if ( scroll > pb_sections[i]._start && scroll <= pb_sections[i]._end ) {
+	// 		$("#bottom_header li").eq( i - 1 ).css({
+	// 			"border-bottom" : "2px solid pink"
+	// 		}).siblings().css({
+	// 			"border-bottom" : ""
+	// 		});
+	// 	}
+	// } 
+}
+
 
 /****************************************************************************
     

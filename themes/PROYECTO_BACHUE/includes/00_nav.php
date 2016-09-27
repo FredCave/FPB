@@ -1,6 +1,6 @@
 <div id="top_header" class="header">
 	<ul>
-		<li>Contacto <span>info@proyectobachue.com</span></li>
+		<li><a href="mailto:info@proyectobachue.com">info@proyectobachue.com</a></li>
 		<li>Fundación Proyecto Bachué</li>
 		<li>Español / Inglés</li>		
 	</ul>

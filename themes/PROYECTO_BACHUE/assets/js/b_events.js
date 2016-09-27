@@ -11,6 +11,13 @@
 
 *****************************************************************************/
 
+// TMP
+
+$(document).on('lazybeforesizes', function(e){
+	console.log(e);	
+});
+
+
 $( document ).ready(function() {
 
 // 1.1. NAV CLICK
@@ -30,7 +37,7 @@ $( document ).ready(function() {
 
 // 1.4. IMAGE GRID CLOSE
 
-	$(document).on( "click", ".image_cell_close", function(){
+	$(document).on( "click", ".grid_close", function(){
 		gridClose( $(this) );
 	});
 
@@ -52,7 +59,7 @@ $( document ).ready(function() {
 		// LOAD ABOUT
 		sectionCheck( 0 );
 		// newsImages();
-		gridManager();
+		// gridManager();
 	}).on('scroll', _.throttle(function() {
 		winScroll = $(window).scrollTop();
 		sectionCheck( winScroll );
@@ -60,6 +67,8 @@ $( document ).ready(function() {
 		$(".image_grid").each( function(){
 			rowHeight ( $(this) );
 		});
+		imageManager();
+		sectionMarkers(); // FOR NAV UNDERLINE
 	}, 500 ));
 
 	// SEPARATE UNTHROTTLED SCROLL EVENT JUST FOR BOTTOM HEADER
