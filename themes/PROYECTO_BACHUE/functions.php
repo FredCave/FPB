@@ -40,7 +40,7 @@ function create_post_types() {
     register_post_type( 'news',
     array(
         'labels' => array(
-            'name' => __( 'News' )
+            'name' => __( 'Archive' )
         ),
         'public' => true,
         'taxonomies' => array('category'),

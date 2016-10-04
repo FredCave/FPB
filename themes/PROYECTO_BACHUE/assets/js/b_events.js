@@ -2,100 +2,67 @@
     
 	EVENTS
 		1.   GENERAL
-			1.1. INIT SMOOTHSCROLL
-			1.2. NAV CLICK
-			1.3. IMAGE GRID CLICK
+
 		2.   NEWS
-			2.1. NEWS IMAGE HOVER
+
 		X.   WINDOW EVENTS
 
 *****************************************************************************/
-
-// TMP
-
-$(document).on('lazybeforesizes', function(e){
-	console.log(e);	
-});
-
 
 $( document ).ready(function() {
 
 // 1.1. NAV CLICK
 
-	$(document).on( "click", "#bottom_header a", function(e){
-		e.preventDefault();
-		var target = $(this).attr("href"),
-			thisId = $(this).attr("data-id");
-		navManager( target, thisId );
-	});
-
-// 1.3. IMAGE GRID CLICK
-
-	$(document).on( "click", ".image_cell_toggle", function(){
-		gridOpen( $(this) );
-	});
-
-// 1.4. IMAGE GRID CLOSE
-
-	$(document).on( "click", ".grid_close", function(){
-		gridClose( $(this) );
-	});
-
-// 2.1. NEWS IMAGE HOVER
-	
-	// $(".news_post").on( "mouseover", function(){
-	// 	newsHover( $(this) );
-	// });
+$("#bottom_header a").on("click", function(e){
+	e.preventDefault();
+	var thisId = $(this).data("id");
+	navClick( thisId );
+});
 
 // X.X. WINDOW EVENTS
 
 	var winScroll;
 
 	$(window).on("load", function(){
+	
 		// RESET SCROLL
 		$("html, body").animate({
 			scrollTop : 0
 		}, 100 );
-		// LOAD ABOUT
-		sectionCheck( 0 );
-		// newsImages();
-		// gridManager();
+		
 	}).on('scroll', _.throttle(function() {
-		winScroll = $(window).scrollTop();
-		sectionCheck( winScroll );
-	}, 1000 )).on( "resize", _.throttle(function(){
-		$(".image_grid").each( function(){
-			rowHeight ( $(this) );
-		});
-		imageManager();
-		sectionMarkers(); // FOR NAV UNDERLINE
-	}, 500 ));
 
-	// SEPARATE UNTHROTTLED SCROLL EVENT JUST FOR BOTTOM HEADER
-	$(window).on( "scroll", function(){
 		winScroll = $(window).scrollTop();
-		bottomHeader( winScroll );
-	});
+		
+
+	}, 500 )).on( "resize", _.throttle(function(){
+		
+
+	}, 500 ));
 
 	// STOP SCROLL ANIMATIONS ON MANUAL SCROLL
 
 	var page = $("html, body");
-	page.on("scroll mousedown wheel DOMMouseScroll mousewheel keyup touchmove", function(){
+	page.on("scroll mousedown wheel DOMMouseScroll mousewheel keyup touchmove", function(e){
 		page.stop();
 	});
+
+	page.on("mousewheel wheel DOMMouseScroll", _.throttle(function(e){
+		edgeDetect(e);
+	}, 250 ));
 
 	var first = true;
 	var handleMediaChange = function (mql) {
 		console.log("mql");
 	    if ( mql.s.matches ) {
 	        // LESS THAN 600PX WIDE     
-	        gridManager();
+
 	    } else if ( mql.m.matches ) {
 	        // MORE THAN 600PX WIDE
-			gridManager();		
+		
 	    } else {
 	    	// MORE THAN 900PX WIDE
-			gridManager();
+
 	    }
 	}
 

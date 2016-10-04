@@ -33,6 +33,7 @@ html, body {
     font-size: 1.05em;
     line-height: 1.25;
     box-sizing: border-box;
+/*    height: 700vh;*/
 }
 
     @media ( max-width: 1000px ) {
@@ -85,33 +86,80 @@ p {
 }
 
 #wrapper {
-/*    border: 1px solid orange;*/
+/*    border: 8px solid green;*/
     width: 100%;
-    height: 100%;
+    height: 100vh;
     overflow: hidden;
+    position: fixed;
+    top: 0;
     padding-bottom: 600px;
     padding-bottom: 50vh;
 }
 
 .wrapper {
-/*    border: 1px solid pink;*/
-    border-bottom: 1px solid black;
+/*    border-bottom: 1px solid black;*/
     width: 78.5%;
+    padding-top: 80px;
+    padding-top: 15vh;
 }
 
 section {
 /*    border: 1px solid purple;*/
-    position: relative;
+    background-color: white;
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    overflow: auto;
+/*    background-color: orange;*/
+/*    margin-bottom: 100vh;*/
+    top: 0;
+    transition: top 1s ease-out;
+    z-index: 100;
 }
 
-section > div {
+.next {
+    top: 0vh; 
+    z-index: 99; 
+}
+
+.current {
+    top: 0;
+    z-index: 100;  
+}
+
+.previous {
+    top: -100vh;
+    z-index: 101;     
+}
+
+.temp-next {
+    z-index: -99;
+    transition: top 0s;
+}
+
+.content_wrapper {
+/*    border: 1px solid orange;*/
+    position: absolute;
+    top: 0;
+    width: 100%;
+    text-align: center;
+    overflow: scroll;
+}
+
+section div span {
+    top: 40%;
+    font-size: 3em;
+    position: absolute;
+}
+
+.content_wrapper > div {
 /*    border: 1px solid red;*/
     width: 80%;  
     margin: 0 0 48px 20%;  
 }
 
 .large_left {
-    border: 1px solid orange;
+/*    border: 1px solid orange;*/
     width: 50%;
 }
 
@@ -297,7 +345,7 @@ section > div {
 /*    border: 1px solid pink;*/
     position: fixed;
     top: 0;
-    height: 50px;
+/*    height: 50px;*/
     font-size: 0.85em;
 }
 
@@ -321,13 +369,17 @@ section > div {
 
 #bottom_header {
 /*    border: 1px solid pink;*/
-    position: absolute;
-    left: -20%;
-    top: -100px;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    transition: top 0.8s ease-out, padding-top 0.8s ease-out;
     margin-bottom: 0 !important;
-    height: 50px;
     text-align: right;
-/*    padding-right: 10px;*/
+    padding-top: 8px;
+}
+
+#bottom_header ul {
+    margin-right: 4px;
 }
 
 #bottom_header li {
@@ -335,16 +387,22 @@ section > div {
     margin: 0 0 0 24px;
 }
 
+#bottom_header .highlight {
+    border-bottom: 1px solid #ec008c;
+}
+
 #main_logo {
 /*    border: 1px solid blue;*/
-    position: absolute;
+    position: fixed;
     left: -2px;
     bottom: 0;
     background-color: white;
     width: 18%;
     min-width: 190px;
     text-align: center;
-    padding: 12px 12px 0px 12px;
+    transition: top 0.8s ease-out;
+/*    padding: 12px 12px 0px 12px;*/
+    padding: 12px;
 }
 
 #main_logo img {
@@ -352,63 +410,27 @@ section > div {
 }
 
 /************************************************
-    NEWS
+    HOME
 ************************************************/
 
-#news_wrapper {
-    border-bottom: 0px;
+#home {
+    border: 2px solid green;
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
 }
-#news_list {
+
+#home_video, #home_single_image {
+    border: 2px solid purple;
     width: 100%;
     height: 100vh;
 }
-/*
-.news_post {
-    position: absolute;
-    margin: 10px;
-    z-index: 1;
-    perspective: 1000;
-    display: inline-block;
-    opacity: 0;
-}
-.news_post_card {
+
+#home_video iframe {
     width: 100%;
     height: 100%;
-    transform-style: preserve-3d;
-    transition: all 1.0s linear;
 }
-.news_post:hover .news_post_card {
-    transform: rotateY(180deg);
-    box-shadow: -5px 5px 5px #aaa;
-}
-.news_post .face {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-}
-.card_portrait {
-    width: 22.5%;
-    height: auto;
-}
-.card_landscape {
-    width: 30%;
-    height: auto;
-}
-.news_post .back {
-    display: block;
-    transform: rotateY(180deg);
-    box-sizing: border-box;
-    padding: 10px;
-    color: white;
-    text-align: center;
-    background-color: #aaa;
-    height: 300px;
-}
-.news_post img {
-    width: 100%;
-    height: auto;
-}*/
 
 /************************************************
     ABOUT
@@ -429,6 +451,7 @@ section > div {
 
 .col_2 {
     margin: 0 0% 0 2%;
+    padding-right: 8px;
 }
 
 .col h2 {

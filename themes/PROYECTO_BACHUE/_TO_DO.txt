@@ -2,7 +2,13 @@
     IN PROGRESS
 ************************************************/
 
-### SANDBERG TYPE NAVIGATION
+### SETUP LANDING PAGE 
+	### ONE IMAGE W/ CAPTION
+	### MULTIPLE IMAGES W/ CAPTIONS 
+
+### PUB BANNER – ADD LINKS
+
+### EXHIBITIONS – 2 COLS ON RIGHT – GOOGLEIMAGES
 
 ### ARCHIVE STYLING
 	### ADD TAGS
@@ -10,7 +16,7 @@
 
 ### MORE IMAGE SIZES : EXTRA LARGE + PORTRAIT SIZE
 
-### UNDERLINE NAV LI WHEN SELECTED 
+
 
 
 
@@ -46,19 +52,6 @@
     TO DO
 ************************************************/
 
-
-
-### STRONGER INTERNAL LINKING – UNLOADED SECTIONS
-
-### SETUP LANDING PAGE 
-	### ONE IMAGE W/ CAPTION
-	### MULTIPLE IMAGES W/ CAPTIONS
-	### FULL SCREEN VIDEO 
-
-### PUB BANNER – ADD LINKS
-
-### EXHIBITIONS – 2 COLS ON RIGHT – GOOGLEIMAGES
-
 ### ADD HASHTAG NAVIGATION – BACK + FORWARD
 
 ### LAZYLOADING
@@ -74,21 +67,25 @@
 
 ### GET REAL FONT
 
+### HIGH QUALITY LOGO
+
 ### MEDIA QUERIES
 
 ### OPTIMISATION
 
 ### FAVICON
 
-### ADD LINK TO EMAIL – GET RID OF CONTACT??
-
 /************************************************
     COMPLETED
 ************************************************/
 
+### NAV FROM CLICK
+
+### CONTENT LOADER NEEDS FIXING
+
 ### New section called Exposiciones 
 
-
+### UNDERLINE NAV LI WHEN SELECTED 
 
 ### GOOGLE IMAGE FUNCTIONALITY
 
