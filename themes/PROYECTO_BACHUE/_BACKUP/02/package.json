@@ -1,0 +1,16 @@
+{
+  "name": "proyecto-bachué",
+  "version": "1.0.0",
+  "description": "Proyecto Bachué website",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:FredCave/Proyecto-Bachue.git"
+  },
+  "devDependencies": {
+    "grunt-banner": "^0.6.0",
+    "grunt-contrib-cssmin": "^1.0.2",
+    "grunt-contrib-imagemin": "^1.0.1",
+    "grunt-contrib-uglify": "^0.11.0",
+    "grunt-contrib-watch": "^0.6.1"
+  }
+}
