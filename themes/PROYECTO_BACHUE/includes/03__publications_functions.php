@@ -56,6 +56,13 @@ function pb_get_pub_list () {
 	
 					<div class="pub_list_text">
 						<?php the_field( "publication_text" ); ?>
+						<!-- CHECK IF VIDEO -->
+						<?php if ( get_field("publication_video") ) {
+							// RETURNS IFRAME TAG
+							$pub_video = get_field("publication_video");
+							$pub_video = str_replace( "src", "data-src", $pub_video );
+							echo $pub_video;
+						} ?>
 					</div>
 
 					<?php 

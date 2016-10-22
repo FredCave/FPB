@@ -49,7 +49,17 @@ function pb_get_home () {
 										if ( get_sub_field("home_internal") ) {
 											// INTERNAL LINK
 											$link_info = get_sub_field("home_internal");
-											$link = "int_" . $link_info[0]->post_type . "_" . $link_info[0]->ID;
+											$p_type = $link_info[0]->post_type;
+											if ( $p_type == "publications" ) {
+											    $section = 3;
+											} elseif ( $p_type == "exhibitions" ) {
+											    $section = 4;
+											} elseif ( $p_type == "news" ) {
+											    $section = 5;
+											} elseif ( $p_type == "collection" ) {
+												$section = 6;
+											}
+											$link = "int_" . $section . "_" . $link_info[0]->ID;
 										} else if ( get_sub_field("home_external") ) {
 											// EXTERNAL LINK
 											$link = get_sub_field("home_external");
@@ -81,8 +91,8 @@ function pb_get_home () {
 										</li>
 										<!-- TEXT + LINK -->
 										<?php if ( get_sub_field("home_text") ) { ?>
-											<div class="home_text">
-												<div class="grid_close"></div>
+											<div class="home_text" data-left="" data-top="">
+												<div class="home_close"></div>
 												<span>
 													<?php the_sub_field("home_text"); ?>
 												</span>

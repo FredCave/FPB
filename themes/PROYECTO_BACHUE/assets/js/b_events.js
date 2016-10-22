@@ -1,15 +1,30 @@
 /*****************************************************************************
     
 	EVENTS
-		1.   GENERAL
+		1. 	NAV
+			1.1. NAV CLICK
+		2.	IMAGE GRIDS
+			2.1. IMAGE GRID CLICK
+		3. 	SECTIONS
+			3.1. HOME
+			3.2. PUBLICATIONS + EXHIBITIONS
+			3.3. ARCHIVE
+			3.4. COLLECTION FILTER
+		4. 	WINDOW EVENTS
+			4.1. MAIN WINDOW EVENTS
+			4.2. MANUAL SCROLL EVENTS
+			4.3. MEDIA QUERIES
 
-		2.   NEWS
-
-		X.   WINDOW EVENTS
 
 *****************************************************************************/
 
 $( document ).ready(function() {
+
+/****************************************************************************
+    
+	1. NAV
+
+*****************************************************************************/
 
 // 1.1. NAV CLICK
 
@@ -19,7 +34,13 @@ $("#bottom_header a").on("click", function(e){
 	navClick( thisId );
 });
 
-// 1.2. IMAGE GRID CLICK
+/****************************************************************************
+    
+	2. IMAGE GRIDS
+
+*****************************************************************************/
+
+// 2.1. IMAGE GRID CLICK
 
 	$(document).on( "click", ".image_cell_toggle", function(){
 		gridOpen( $(this) );
@@ -29,7 +50,13 @@ $("#bottom_header a").on("click", function(e){
 		gridClose( $(this) );
 	});
 
-// X.X. HOME
+/****************************************************************************
+    
+	3. SECTIONS
+
+*****************************************************************************/
+
+// 3.1. HOME
 	
 	$(document).on( "mouseover", ".home_multiple_image", function(){
 		homeHover( $(this) );
@@ -41,17 +68,23 @@ $("#bottom_header a").on("click", function(e){
 
 	$(document).on( "click", ".text_link a", function(e){
 		e.preventDefault();
-		homeLinkOpen( $(this).parents("li").data("link") );
+		var link = $(this).parents(".home_text").prev("li").data("link");
+		console.log( 71, link );
+		homeLinkOpen( link );
 	});	
 
-// X.X. PUBLICATIONS + EXHIBITIONS
+	$(".home_close").on( "click", function(){
+		homeClose();
+	});	
+
+// 3.2. PUBLICATIONS + EXHIBITIONS
 
 	$(document).on( "click", ".banner_link", function(e) {
 		e.preventDefault();
 		bannerLink( $(this) );
 	});
 
-// X.X. ARCHIVE
+// 3.3. ARCHIVE
 
 	$(document).on( "change", "#archive_filter select", function(e) {
 		e.preventDefault();
@@ -61,7 +94,7 @@ $("#bottom_header a").on("click", function(e){
 		archiveFilter( selec );
 	});
 
-// X.X. COLLECTION FILTER
+// 3.4. COLLECTION FILTER
 
 	$(document).on( "keyup", "#search_input", function () {
 		var term = $("#search_input").val();
@@ -76,7 +109,14 @@ $("#bottom_header a").on("click", function(e){
 		collFilter( selec );
 	});
 
-// X.X. WINDOW EVENTS
+
+/****************************************************************************
+    
+	4. WINDOW EVENTS
+
+*****************************************************************************/
+
+// 4.1. MAIN WINDOW EVENTS
 
 	var winScroll;
 
@@ -86,41 +126,49 @@ $("#bottom_header a").on("click", function(e){
 			scrollTop : 0
 		}, 100 );
 		homeImages();
-		gridManager();
+		// gridManager();
 		imageManager();
-
+		contentLoader(); 
 	}).on('scroll', _.throttle(function() {
-
-		winScroll = $(window).scrollTop();
-		
-
+		// winScroll = $(window).scrollTop();
 	}, 500 )).on( "resize", _.throttle(function(){
 		imageManager();
+		ifrHeight();
 	}, 500 ));
 
-	// STOP SCROLL ANIMATIONS ON MANUAL SCROLL
+// 4.2. MANUAL SCROLL EVENTS
 
 	var page = $("html, body");
 	page.on("scroll mousedown wheel DOMMouseScroll mousewheel keyup touchmove", function(e){
-		page.stop();
+		// page.stop();
 	});
 
-	page.on("mousewheel wheel DOMMouseScroll", _.throttle(function(e){
-		_scrollDetect(e);
-	}, 0 ));
+	page.on("mousewheel wheel DOMMouseScroll", function(e){
+		if ( !$("#wrapper").hasClass("wheel_block") ) {
+			_scrollDetect(e);
+		} else {
+			console.log("Wheel blocked.");
+		}
+	});
+
+	page.on("mousewheel wheel DOMMouseScroll", _.throttle( function(e){
+		navHighlight();
+	}, 500 ));
+
+// 4.3. MEDIA QUERIES
 
 	var first = true;
 	var handleMediaChange = function (mql) {
 		console.log("mql");
 	    if ( mql.s.matches ) {
 	        // LESS THAN 600PX WIDE     
-			gridManager();
+			// gridManager();
 	    } else if ( mql.m.matches ) {
 	        // MORE THAN 600PX WIDE
-			gridManager();
+			// gridManager();
 	    } else {
 	    	// MORE THAN 900PX WIDE
-			gridManager();
+			// gridManager();
 	    }
 	}
 

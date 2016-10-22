@@ -3,14 +3,26 @@
 	FUNCTIONS
 		1.	 GENERAL
 			1.1. NAVIGATING BETWEEN SECTIONS
-			1.2. CONTENT LOADER
+			1.2. IMAGE MANAGER
+			1.3. OPEN IFRAMES
 		2. 	NAV
-
+			2.1. BOTTOM NAV FIXER
+			2.2. NAV SECTION HIGHLIGHTER
+			2.3. NAV CLICK
 		3.	IMAGE GRIDS
-
-		4. SECTIONS
-			4.1. HOME
-			4.X. COLLECTION
+			3.1. IMAGE GRID MANAGER
+			3.2. IMAGE GRID TOGGLE
+		4. HOME
+			4.1. HOME IMAGE PLACEMENT
+			4.2. HOME IMAGES HOVER
+			4.3. HOME IMAGES CLICK
+			4.4. HOME LINK OPEN
+		5. PUBLICATIONS + EXHIBITIONS
+			5.1. BANNER LINKS
+		6. ARCHIVE + COLLECTIONS
+			6.1. ARCHIVE FILTER
+			6.2. COLLECTION PASSWORD
+			6.3. COLLECTION FILTER
 
 
 *****************************************************************************/
@@ -32,25 +44,27 @@ var winH = $(window).height()
 		switchBlock = false;
 		if ( !switchBlock ) {
 			console.log("_switchClasses", direction);
-			if ( direction === "up" ) {
+			if ( direction === "down" ) {
 				$(".current").removeClass("current").prev().addClass("current").removeClass("scroll_block"); 
 				$(".previous").removeClass("previous");
-				$(".current").next().addClass("previous");				
-			} else if ( direction === "down" ) {
+				$(".current").next().addClass("previous");
+				// LOAD NEXT FUNCTION
+				contentLoader();				
+			} else if ( direction === "up" ) {
 				$(".current").removeClass("current")
 				$(".previous").removeClass("previous").addClass("current").removeClass("scroll_block");
 				$(".current").next().addClass("previous");
 			}
 			// UPDATE CURRENT SECTION STORED IN WRAPPER
 			var curr = $(".current").attr("data-content");
-			console.log( 49, curr );
+			// console.log( 49, curr );
 			$("#wrapper").attr( "data-current", curr );
 			// UNBLOCK FUNCTION
 			switchBlock = true;
 		}
 	}
 
-	function _scrollDown(delta) {
+	function _scrollDown( delta ) {
 		console.log("_scrollDown", $("#wrapper").attr("data-current"));
 
 		var current = $(".current"),
@@ -59,29 +73,27 @@ var winH = $(window).height()
 			currH = $(".current").outerHeight(),
 			multiple = 1,
 			newTop = currTop - ( delta * multiple );
-			// console.log( newTop );
+			// console.log( 62, "New top: ", newTop );
 
 		// ADD SCROLL_BLOCK CLASS
 		current.addClass("scroll_block");
 
-		// console.log( 65, currH + currTop );
-
 		// IF VISIBLE
 		if ( currH + currTop >= 40 ) {
-			// console.log( 70, currH + currTop, currTop, delta );
+			console.log( 85, currH + currTop, currTop, delta, newTop );
 			current.css({
 				"-webkit-transform" : "translateY(" + newTop + "px)",
   					"-ms-transform" : "translateY(" + newTop + "px)",
 						"transform" : "translateY(" + newTop + "px)"
 			});
-		} else {			
+		} else {
+			console.log( 92, "Switch" );			
 			// SWITCH CLASSES
-			_switchClasses("up");
+			_switchClasses("down");
 		}
 
 	}
 
-	var wheelBlock = false;
 	function _scrollUp(delta) {
 		console.log("_scrollUp", $("#wrapper").attr("data-current"));
 
@@ -89,11 +101,11 @@ var winH = $(window).height()
 			currTop = parseInt( current.css('transform').split(',')[5] ),
 			currH = $(".current").outerHeight(),
 			multiple = 1;
-		console.log( 91, "currTop: ", currTop, "currScrollTop: ", current.scrollTop() )
+		// console.log( 91, "currTop: ", currTop, "currScrollTop: ", current.scrollTop() )
 
 		console.log("Scrolling up.");
 		// CHECK IF CURRENT TOP > 0
-		if ( currTop < 0 && !wheelBlock ) {
+		if ( currTop < 0 && !$("#wrapper").hasClass("wheel_block") ) {
 			var newTop = currTop - ( delta * multiple );
 			if ( newTop >= 0 ) {
 				newTop = 0;
@@ -105,34 +117,39 @@ var winH = $(window).height()
 			});
 		} else {
 			// REMOVE SCROLLING CLASS
-			console.log( 126, "Remove scroll_block class." );
+			// console.log( 126, "Remove scroll_block class." );
 			current.removeClass("scroll_block");
 
 			// IF CURRENT SCROLLTOP IS 0 AND WRAPPER DATA-CURRENT IS NOT 1
 			// SWITCH CLASSES + ANIMATE
 
 			if ( current.scrollTop() <= 10 && $("#wrapper").attr("data-current") != 1 ) {
-				if ( !wheelBlock ) {
+				if ( !$("#wrapper").hasClass("wheel_block")) {
 					console.log( 110, "Animate" );
 					// BLOCK SCROLLING
-					wheelBlock = true;
-					console.log("Wheel blocked.");
+					$("#wrapper").addClass("wheel_block");
+					// console.log("Wheel blocked.");
+					
 					// SWITCH CLASSES
-					_switchClasses("down");
+					_switchClasses("up");
 					$(".current").css({
-								"transition": "transform 2s",
+								"transition": "transform 1s",
 						"-webkit-transform" : "",
 			      			"-ms-transform" : "",
 								"transform" : ""			
 					});
+					// RUN NAV CHECK DURING ANIMATION
 					setTimeout( function(){
-						wheelBlock = false;
-						console.log("Wheel unblocked.");
+						bottomNavCheck();	
+					}, 200 );
+					setTimeout( function(){
+						$("#wrapper").removeClass("wheel_block");
+						// console.log("Wheel unblocked.");
 						$(".current").css({
-								"transition": "transform 1s"		
+								"transition": ""		
 						});
 
-					}, 2000 );
+					}, 1000 );
 				}
 			}
 
@@ -145,20 +162,19 @@ var winH = $(window).height()
 		var delta =  e.originalEvent.deltaY, // NEED CROSSBROWSER SOLUTION
 			current = $(".current"),
 			wrapperCurrent = $("#wrapper").attr("data-current"); 
-
-
 		if ( wrapperCurrent == 1 ) {
 			bottomNavCheck();
 		}
-
 		// IF SCROLLING DOWN
 		if ( delta > 0 ) {
+			console.log( 155, "Scrolling down." );
 			// IF CURRENT AT BOTTOM (OR TOP)
 			if ( current.scrollTop() + current.innerHeight() >= current[0].scrollHeight - 10 ) {
+				console.log( 158, "Current at bottom." );
 				// IF NOT LAST SECTION
 				if ( wrapperCurrent != 6 ) {
 					_scrollDown(delta);	
-				}
+				} 
 			} else {
 				console.log("Normal scrolling.");
 				// ALLOW CURRENT TO SCROLL NORMALLY
@@ -166,8 +182,10 @@ var winH = $(window).height()
 			}
 		// IF SCROLLING UP
 		} else if ( delta < 0 ) {
+			console.log( 169, "Scrolling up." );
 			// IF CURRENT AT TOP 
 			if ( current.scrollTop() <= 20 ) {
+				console.log( 158, "Current at top(<20)." );
 				_scrollUp(delta);
 			} else {
 				console.log("Normal scrolling.");
@@ -178,7 +196,7 @@ var winH = $(window).height()
 
 	}
 
-// 1.3. IMAGE MANAGER
+// 1.2. IMAGE MANAGER
 
 function imageResizer ( img ) {
 	console.log("imageResizer");
@@ -207,6 +225,100 @@ function imageManager ( img ) {
     }
 }
 
+// 1.3. OPEN IFRAMES
+
+	// RUN ON RESIZE
+function ifrHeight ( target ) {
+	console.log("ifrHeight");
+	// IF TARGET – ONLY ONE IFRAME
+	if (typeof target !== 'undefined') {
+		console.log( 220, "one" );
+		// GET RATIO AND WIDTH
+		var ratio = target.data("ratio"),
+			width = target.width();
+		target.css( "height", width*ratio );
+	} else {
+		console.log( 226, "all" );
+		// ELSE ALL IFRAMES
+		iframe.each( function(){
+			// GET RATIO AND WIDTH
+			var ratio = $(this).data("ratio"),
+				width = $(this).width();
+			$(this).css( "height", width*ratio );
+		});		
+	}
+}
+
+function openIframes ( section ) {
+	console.log("openIframes", section);
+	var iframe = $("#" + section).find("iframe");
+	// SET RATIO
+	var ratio = iframe.attr("height") / iframe.attr("width");
+	iframe.attr("data-ratio", ratio);
+	// RUN HEIGHT FUNCTION
+	ifrHeight ( iframe );
+	// ADD SRC
+	iframe.attr( "src", iframe.data("src") );
+}
+
+// 1.4. CONTENT LOADER
+
+function contentLoader ( target ) {
+	console.log("contentLoader", target);
+	// RUN ON PAGE LOAD / SWITCHCLASSES / NAVCLICK
+	if (typeof target !== 'undefined') {
+		// IF TARGET DEFINED
+		// console.log( 269, "Load " +  target);
+		$("#" + target).show().addClass("loaded");
+	} else {
+		// ELSE LOAD NEXT IN LINE
+		// console.log( 271, "Load next in line.");
+		$(".current").prev().show().addClass("loaded");
+	}
+}
+
+// 1.5. NAVIGATE TO SECTION
+
+
+
+function navToSection ( section ) {
+	console.log("navToSection");
+	// LOAD RELEVANT SECTION
+	contentLoader( "section_" + section );
+	// ADD WHEEL_BLOCK CLASS
+	$("#wrapper").addClass("wheel_block");
+	// RUN BOTTOM NAV CHECK DURING ANIMATION
+	var navInterval = 0;
+	navInterval = setInterval( function(){
+		bottomNavCheck();
+	}, 100 );
+	// ANIMATE ALL SECTIONS BEFORE
+	$("#section_" + section).nextAll().each( function(){
+		// WORK OUT HOW MUCH IT HAS TO BE MOVED UP
+		var thisH = 0 - $(this).outerHeight();
+		$(this).css({
+			"transition"		: "transform 1s",
+			"-webkit-transform" : "translateY(" + thisH + "px)",
+      			"-ms-transform" : "translateY(" + thisH + "px)",
+					"transform" : "translateY(" + thisH + "px)",
+			"display"			: "block"		
+		});
+	});
+	// ADD CURRENT CLASS
+	$(".current").removeClass("current");
+	$(".previous").removeClass("previous");
+	$("#section_" + section).addClass("current").next().addClass("previous");
+	// UPDATE DATA-CURRENT
+	$("#wrapper").attr("data-current", section);
+	// REMOVE WHEEL_BLOCK CLASS + RESET TRANSITIONS
+	setTimeout( function(){
+		$("#wrapper").removeClass("wheel_block");
+		$("section").css("transition","");
+		console.log( 308 );
+		clearInterval( navInterval );
+	}, 1000 );
+}
+
 
 /****************************************************************************
     
@@ -214,65 +326,50 @@ function imageManager ( img ) {
 
 *****************************************************************************/
 
+// 2.1. BOTTOM NAV FIXER
+
 function bottomNavCheck () {
 	// console.log("bottomNavCheck");
 	// GET HEIGHT OF TOP NAV
 	var topMargin = $("#top_header").outerHeight();
 	// GET CURRENT TOP POSITION OF BOTTOM NAV
 	var bottomTop = Math.floor( $("#bottom_header_unfixed").offset().top );
-	console.log("bottomNavCheck", 217, topMargin, bottomTop);
 	// NEED TO LEAVE PLACEHOLDER THAT SCROLLS WITH THE PAGE
-
+	// console.log( 289, bottomTop, topMargin );
 	if ( bottomTop <= topMargin ) {
-		console.log("Fix nav.");
+		// console.log("Fix nav.");
 		$("#bottom_header").appendTo( $("#bottom_header_fixed") );
 	} else {
-		console.log("Unfix nav.");
+		// console.log("Unfix nav.");
 		$("#bottom_header").appendTo( $("#bottom_header_unfixed") );
 	}
 
 	// // CALCULATE MAIN LOGO SEPARATELY
-	// var logoTop = $("#main_logo").offset().top;
-	// // SET TOP AND THEN ANIMATE
-	// $("#bottom_header").css( "top", bottomTop );
-	// $("#main_logo").css( "top", logoTop );
-	// setTimeout( function(){
-
-	// 	$("#main_logo").css({
-	// 		"top" : topMargin - 8, 
-	// 		"bottom" : "initial"
-	// 	});		
-	// }, 0 );
-}
-
-function bottomNavReset () {
-	console.log("bottomNavReset");
-	// CALCULATE BOTTOM
-	var currBottom = $(window).height() - ( $("#bottom_header").offset().top + $("#bottom_header").outerHeight() );
-	// CALCULATE MAIN LOGO SEPARATELY
-	var logoBottom = $(window).height() - ( $("#main_logo").offset().top + $("#bottom_header").outerHeight() );
-	// SET BOTTOM AND THEN ANIMATE
-	$("#bottom_header").css( "bottom", currBottom );
-	$("#main_logo").css( "bottom", logoBottom );
-	setTimeout( function(){
-		$("#bottom_header").css({
-			"top" : "",
-			"padding-top" : "",
-			"bottom" : "" 
-		});
-		$("#main_logo").css({
+	var logoH = $("#main_logo").outerHeight(),
+		logoTop = bottomTop + $("#bottom_header_unfixed").height() - logoH;
+		console.log( 311, logoTop, topMargin );
+	if ( logoTop <= topMargin ) {
+		$("#main_logo").appendTo( $("#bottom_header_fixed") ).css({
+			"position" : "fixed",
+			"top" : topMargin, 
+			"bottom" : "initial"
+		});	
+	} else {
+		$("#main_logo").appendTo( $("#bottom_header_unfixed") ).css({
+			"position" : "",
 			"top" : "", 
 			"bottom" : ""
-		});		
-	}, 50 );
-	firstShift = true;
+		});	
+	}
+
 }
 
+// 2.2. NAV SECTION HIGHLIGHTER
+
 function navHighlight () {
-	console.log("navHighlight");
+	// console.log("navHighlight");
 	// GET CURRENT
-	var currId = parseInt( $(".current").attr("data-content") );
-	// console.log( 241, currId );
+	var currId = parseInt( $("#wrapper").attr("data-current") );
 	// RESET SIBLINGS
 	$("#bottom_header li").removeClass("highlight");
 	// IF NOT HOME LINK
@@ -281,6 +378,8 @@ function navHighlight () {
 	}
 }
 
+// 2.3. NAV CLICK
+
 function navClick ( targetId ) {
 	console.log( "navClick", targetId );
 	var currentId = parseInt( $(".current").attr("data-content") );
@@ -288,25 +387,18 @@ function navClick ( targetId ) {
 	if ( targetId === currentId ) {
 		// SCROLL TO TOP OF CURRENT
 		$(".current").animate({ scrollTop: 0 }, 500 );
-	// IF LOADED IN NEXT
-	} else if ( targetId === currentId + 1 ) {
-		// SHIFTUP TO NEXT
-		shiftUp();
-	// ELSE IF LOADED IN PREVIOUS
-	} else if ( targetId === currentId - 1 ) {
-		// SHIFTDOWN TO PREV
-		shiftDown();
-	// ELSE LOAD CONTENT
+	// ELSE NAV TO SECTION
 	} else {
-		if ( targetId > currentId + 1 ) {
-			// IF TARGET HIGHER THAN CURRENT LOAD IN NEXT
-			console.log("Load content in next.");
-			contentLoader( targetId, "next" );
-		} else if ( targetId < currentId - 1 ) {
-			// ELSE LOAD IN PREVIOUS
-			console.log("Load content in previous.");
-			contentLoader( targetId, "prev" );			
-		}		
+		console.log("NAV TO SECTION");
+	
+
+
+		// HERE!!!!!
+
+
+
+
+
 	}
 }
 
@@ -316,7 +408,7 @@ function navClick ( targetId ) {
 
 *****************************************************************************/
 
-// 1.2. IMAGE GRID MANAGER
+// 3.1. IMAGE GRID MANAGER
 
 	// GRID MANAGER
 	// RUNS ON AJAX LOAD + MEDIA QUERY RESIZE
@@ -411,7 +503,7 @@ function rowHeight ( grid ) {
 
 }
 
-// 1.3. IMAGE GRID TOGGLE
+// 3.2. IMAGE GRID TOGGLE
 
 function gridOpen ( click ) {
 	// CLICK == .IMAGE_SMALL
@@ -473,11 +565,11 @@ function gridClose ( click ) {
 
 /****************************************************************************
     
-	4. SECTIONS
+	4. HOME
 
 *****************************************************************************/
 
-// 4.1. HOME
+// 4.1. HOME IMAGE PLACEMENT
 
 function homeImages () {
 	console.log("homeImages");
@@ -503,13 +595,17 @@ function homeImages () {
 	// SHUFFLE HEIGHT ARRAY
 	heightArray = _.shuffle(heightArray);
 
-
 	// LOOP THROUGH LI
 	img.each( function(i){
 		var rand = Math.random() * tranche / 2 + ( tranche / 4 );
 		thisLeft = rand + ( tranche * i );
-		thisTop = heightArray[i];	
-		// console.log( 480, i, thisTop, thisLeft );
+		thisTop = heightArray[i],
+		thisBottom = ( thisTop / 100 * img.parents(".content_wrapper").height() ) + $(this).height(),	
+		bottomMax = img.parents(".content_wrapper").height();
+		if ( thisBottom > bottomMax ) {
+			console.log( 530, "Image too low.");
+			thisTop = thisTop * 0.8;
+		}
 		$(this).css({
 			"top" : thisTop + "%",
 			"left" : thisLeft + "%"
@@ -523,16 +619,7 @@ function homeImages () {
 
 }
 
-	// MASONRY INIT
-
-// function masonryInit () {
-// 	$('#home_multiple_images').masonry({
-// 		itemSelector: '.home_multiple_image',
-// 		gutter: 60
-// 	});
-// }
-
-	// HOME IMAGES HOVER
+	// 4.2. HOME IMAGES HOVER
 
 function homeHover ( home_post ) {
 	console.log("homeHover");
@@ -540,7 +627,7 @@ function homeHover ( home_post ) {
 	home_post.css( "z-index", currZ + 1 ).siblings(".home_multiple_image").css( "z-index", "1" );
 }
 
-	// HOME IMAGES CLICK
+	// 4.3. HOME IMAGES CLICK
 
 function homeClick ( click ) {
 	console.log("homeClick");
@@ -548,49 +635,52 @@ function homeClick ( click ) {
 	// CLOSE ANY OTHER OPEN TEXT BLOCKS
 	$(".home_text").hide();
 	// IF NO TEXT BLOCK
-	if ( !click.siblings(".home_text").length ) {
+	if ( !click.next(".home_text").length ) {
 		console.log("No text block.", link);
 		// SCROLL DOWN TO LINK
 		homeLinkOpen(link);
 		return;
 	}
-	// CHECK WHICH SIDE OF IMAGE THERE IS THE MOST SPACE
-	var winW = $(window).width(),
-		leftMargin = Math.floor( click.position().left / winW * 100 ), // PERCENTAGE
-		imgW = Math.floor( click.width() / winW * 100 ), // PERCENTAGE
-		rightMargin = 100 - ( leftMargin + imgW ), // PERCENTAGE
-		leftPos,
-		topPos = Math.random() * 67;
-	console.log( 525, imgW, leftMargin, rightMargin );
-	if ( leftMargin > rightMargin ) {
-		console.log("LEFT", rightMargin);
-		// SHOW ON LEFT
-			// IF MARGIN BIGGER THAN TEXT BLOCK – CENTER
-		if ( leftMargin > imgW ) {
-			// CENTRE ON LEFT
-			leftPos = ( leftMargin - imgW ) / 2;
-		} else {
-			// STICK TO LEFT
-			leftPos = 0;
-		}
+	// CHECK IF POSITION HAS ALREADY BEEN CALCULATED
+	if ( click.siblings(".home_text").attr("data-left").length && click.siblings(".home_text").attr("data-top").length ) {
+		// SHOW BLOCK
+		click.siblings(".home_text").show();
 	} else {
-		console.log("RIGHT");
-		// SHOW ON RIGHT
-			// IF MARGIN BIGGER THAN TEXT BLOCK – CENTER
-		if ( rightMargin > click.width() ) {
-			// CENTRE ON RIGHT
-			leftPos = 100 - ( ( rightMargin - imgW ) / 2 ) - imgW;
+		// CALCULATE POSITION – ALL FIGURES IN PERCENTAGES
+		var winW = $(window).width(),
+			leftMargin = Math.floor( click.position().left / winW * 100 ), 
+			imgW = Math.floor( click.width() / winW * 100 ), 
+			rightMargin = 100 - ( leftMargin + imgW ),
+			leftPos,
+			topPos = Math.floor( Math.random() * 67 );
+		if ( leftMargin > rightMargin ) {
+			// SHOW ON LEFT
+			if ( leftMargin > imgW ) {
+				// CENTRE ON LEFT
+				leftPos = ( leftMargin - imgW ) / 2;
+			} else {
+				// STICK TO LEFT
+				leftPos = 0;
+			}
 		} else {
-			// STICK TO RIGHT
-			leftPos = 100 - rightMargin;
+			// SHOW ON RIGHT
+			if ( rightMargin > imgW ) {
+				// CENTRE ON RIGHT
+				leftPos = rightMargin + ( ( rightMargin - imgW ) / 2 );
+			} else {
+				// STICK TO RIGHT
+				leftPos = 100 - imgW;
+			}
 		}
+		click.siblings(".home_text").attr({
+			"data-left" : leftPos,
+			"data-top" : topPos
+		}).css({
+			"display" : "block",
+			"left" : leftPos + "%",
+			"top" : topPos + "%"
+		});
 	}
-	console.log( 548, leftPos );
-	click.siblings(".home_text").css({
-		"display" : "block",
-		"left" : leftPos + "%",
-		"top" : topPos + "%"
-	});
 }
 
 function homeLinkOpen ( link ) {
@@ -600,47 +690,71 @@ function homeLinkOpen ( link ) {
 		var section = link.split("_")[1],
 			post = link.split("_")[2],
 			targetId;
-		switch ( section ) {
-			case "publications":
-				targetId = 3;
-				break;
-			case "exhibitions":
-				targetId = 4;
-				break;
-			case "news":
-				targetId = 5;
-				break;
-		}
-		// NAVIGATE TO SECTION
-		contentLoader( targetId, "next" );
+		// SCROLL TO SECTION
+		navToSection( section );
 		// SCROLL TO POST
-			
+		console.log( 664, "Scroll to post." );
 	} else if ( link.substring(0,4) === "http" ) {
 		console.log("external");		
 	}
 }
 
-// 4.2. PUBLICATIONS LINK
+function homeClose () {
+	console.log("homeClose");
+	$(".home_text").hide();
+}
+
+/****************************************************************************
+    
+	5. PUBLICATIONS + EXHIBITIONS
+
+*****************************************************************************/
+
+// 5.1. BANNER LINKS
 
 function bannerLink ( click ) {
 	// CLICK = A.BANNER_LINK
 	console.log("bannerLink");
+	// SCROLL TO TOP
+	$(".current").css( {
+		"transition" 		: "all 1s",
+		"-webkit-transform" : "",
+			"-ms-transform" : "",
+				"transform" : ""
+	}, 1000 );
+	// AFTER ANIMATION REMOVE TRANSITION
+	setTimeout( function(){
+		$(".current").css( "transition", "" );			
+	}, 1000 );
 	var thisId = click.data("link");
-	console.log( 480, thisId );
+	// console.log( 480, thisId );
 	// HIDE OTHER PUBLICATIONS
 	$( ".list_post" ).hide().removeClass("selected");
 	// SHOW SELECTED PUBLICATION
 	$( "#" + thisId ).show().addClass("selected");
-	// ANIMATE PARENT HEIGHT
+	// ANIMATE PARENT HEIGHT THEN SET TO AUTO
 	var thisH = $( "#" + thisId ).height();
 	$( "#" + thisId ).parents(".list").css( "height", thisH );
+	setTimeout( function(){
+		$( "#" + thisId ).parents(".list").css( "height", "auto" );
+	}, 500 );
 	// SCROLL TO SELECTED POST
 	var listTop = $( "#" + thisId ).parents(".list").position().top,
 		offset = 120;
 	$(".current").animate( { scrollTop: listTop - offset }, 500 );
+
+	// OPEN ANY IFRAMES
+	openIframes( click.parents("section").attr("id") );
+
 }
 
-// 4.3. ARCHIVE FILTER
+/****************************************************************************
+    
+	6. ARCHIVE + COLLECTION
+
+*****************************************************************************/
+
+// 6.1. ARCHIVE FILTER
 
 function archiveFilter ( value ) {
 	console.log("archiveFilter");
@@ -656,9 +770,7 @@ function archiveFilter ( value ) {
 	}
 }
 
-// 4.3. COLLECTION
-
-	// PASSWORD FORM
+// 6.2. COLLECTION PASSWORD
 
 var attempts = 0;
 function passCheck () {
@@ -687,7 +799,7 @@ function passCheck () {
 	}
 }
 
-	// COLLECTION FILTER
+// 6.3. COLLECTION FILTER
 
 function collSearch ( input ) {
 	// console.log("collFilter", input);
@@ -718,11 +830,3 @@ function collFilter ( value ) {
 		$("[data-type='" + value + "']").show();		
 	}
 }
-
-
-
-/****************************************************************************
-    
-	5.
-
-*****************************************************************************/
