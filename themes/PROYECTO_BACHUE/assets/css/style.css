@@ -103,10 +103,18 @@ p {
 
 .wrapper {
 /*    border-bottom: 1px solid black;*/
-    width: 78.5%;
     padding-top: 80px;
     padding: 15vh 0 20vh 0;
+    width: 80%;  
+    margin: 0 0 48px 20%;  
 }
+
+    @media ( max-width: 500px ) {
+        .wrapper {
+            margin-left: 12px;
+            width: 95%;
+        }
+    }
 
 section {
 /*    border: 1px solid purple;*/
@@ -130,12 +138,6 @@ section {
     top: 0;
     width: 100%;
     overflow: scroll;
-}
-
-.content_wrapper > div {
-/*    border: 1px solid red;*/
-    width: 80%;  
-    margin: 0 0 48px 20%;  
 }
 
 .large_left {
@@ -330,12 +332,13 @@ iframe {
 
 .header li {
 /*    border: 1px solid green;*/
-    display: inline-block;    
+    display: inline-block; 
 }
 
 .header a {
     color: black;
     font-weight: normal;
+    border-bottom: 1px solid transparent;   
 }
 
 .header a:hover {
@@ -355,9 +358,24 @@ iframe {
     position: absolute;
 }
 
+    @media ( max-width: 500px ) {
+        #top_header {
+            height: auto;
+        }  
+        #top_header li {
+/*            border: 1px solid orange;*/
+            display: block;
+            left: 0;
+            right: inherit;
+            position: relative;
+            margin-bottom: 4px;
+        }
+    }
+
 #top_header li:nth-child(2) {
-    left: 50%;
-    transform: translateX(-50%);
+/*    left: 50%;
+    transform: translateX(-50%);*/
+    right: 18px;
 }
 
 #top_header li:last-child {
@@ -405,6 +423,33 @@ iframe {
     margin: 0 0 0 24px;
 }
 
+    @media ( max-width: 500px ) {
+        #bottom_header_fixed {
+/*            border: 1px solid purple;*/
+            bottom: 0;
+            width: 100%;
+            height: 190px;
+            z-index: 99999;
+            display: block;
+            position: fixed;
+        }
+        #bottom_header_fixed .header {
+            top: 48px;
+/*            padding-top: 4px;*/
+        }
+        #bottom_header {
+            /*border: 1px solid pink;*/
+            height: auto;
+            padding-top: 8px;
+        }
+        #bottom_header li {
+            display: block;
+            text-align: center;
+            margin-bottom: 4px;
+            margin-left: 0px;
+        }
+    }
+
 #bottom_header .highlight {
     border-bottom: 1px solid #ec008c;
 }
@@ -425,6 +470,12 @@ iframe {
 #main_logo img {
     width: 90%;
 }
+
+    @media ( max-width: 500px ) {
+        #main_logo {
+            display: none;
+        }
+    }
 
 /************************************************
     HOME
@@ -560,6 +611,13 @@ iframe {
     text-align: left;
     margin: 0 2% 0 0%;
 }
+
+    @media ( max-width: 500px ) {
+        .col {
+            width: 98%;
+            display: block;
+        }
+    }
 
 .col_2 {
     margin: 0 0% 0 2%;

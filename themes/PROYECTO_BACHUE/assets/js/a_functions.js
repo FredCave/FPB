@@ -292,29 +292,51 @@ function navToSection ( section ) {
 	navInterval = setInterval( function(){
 		bottomNavCheck();
 	}, 100 );
-	// ANIMATE ALL SECTIONS BEFORE
-	$("#section_" + section).nextAll().each( function(){
-		// WORK OUT HOW MUCH IT HAS TO BE MOVED UP
-		var thisH = 0 - $(this).outerHeight();
-		$(this).css({
-			"transition"		: "transform 1s",
-			"-webkit-transform" : "translateY(" + thisH + "px)",
-      			"-ms-transform" : "translateY(" + thisH + "px)",
-					"transform" : "translateY(" + thisH + "px)",
-			"display"			: "block"		
+	console.log(295, "Target: ", section, "Current: ", $("#wrapper").data("current") );
+	// IF AFTER CURRENT 
+	if ( section > $("#wrapper").attr("data-current") ) {
+		console.log(297, "Before");
+		// ANIMATE ALL SECTIONS BEFORE
+		$("#section_" + section).nextAll().each( function(){
+			// WORK OUT HOW MUCH IT HAS TO BE MOVED UP
+			var thisH = 0 - $(this).outerHeight();
+			$(this).css({
+				"transition"		: "transform 1s",
+				"-webkit-transform" : "translateY(" + thisH + "px)",
+	      			"-ms-transform" : "translateY(" + thisH + "px)",
+						"transform" : "translateY(" + thisH + "px)",
+				"display"			: "block"		
+			});
 		});
-	});
+	// ELSE IF BEFORE
+	} else {
+		console.log(311, "After");
+		// ANIMATE ALL SECTIONS AFTER
+		$("#section_" + section).prevAll().andSelf().each( function(){
+			$(this).css({
+				"transition"		: "transform 1s",
+				"-webkit-transform" : "translateY(0px)",
+	      			"-ms-transform" : "translateY(0px)",
+						"transform" : "translateY(0px)",
+				"display"			: "block"		
+			});
+		});
+	}
 	// ADD CURRENT CLASS
 	$(".current").removeClass("current");
 	$(".previous").removeClass("previous");
 	$("#section_" + section).addClass("current").next().addClass("previous");
 	// UPDATE DATA-CURRENT
+	console.log( 330, section );
 	$("#wrapper").attr("data-current", section);
+	console.log( 332, $("#wrapper").attr("data-current") );
+	// UPDATE NAV HIGHLIGHT
+	navHighlight();
 	// REMOVE WHEEL_BLOCK CLASS + RESET TRANSITIONS
 	setTimeout( function(){
 		$("#wrapper").removeClass("wheel_block");
 		$("section").css("transition","");
-		console.log( 308 );
+		// console.log( 308 );
 		clearInterval( navInterval );
 	}, 1000 );
 }
@@ -330,36 +352,42 @@ function navToSection ( section ) {
 
 function bottomNavCheck () {
 	// console.log("bottomNavCheck");
-	// GET HEIGHT OF TOP NAV
-	var topMargin = $("#top_header").outerHeight();
-	// GET CURRENT TOP POSITION OF BOTTOM NAV
-	var bottomTop = Math.floor( $("#bottom_header_unfixed").offset().top );
-	// NEED TO LEAVE PLACEHOLDER THAT SCROLLS WITH THE PAGE
-	// console.log( 289, bottomTop, topMargin );
-	if ( bottomTop <= topMargin ) {
-		// console.log("Fix nav.");
-		$("#bottom_header").appendTo( $("#bottom_header_fixed") );
-	} else {
-		// console.log("Unfix nav.");
-		$("#bottom_header").appendTo( $("#bottom_header_unfixed") );
-	}
+	// ONLY RUN IF SCREEN IS WIDER THAN 500PX
+	if ( $(window).width() > 500 ) {
+		// GET HEIGHT OF TOP NAV
+		var topMargin = $("#top_header").outerHeight();
+		// GET CURRENT TOP POSITION OF BOTTOM NAV
+		var bottomTop = Math.floor( $("#bottom_header_unfixed").offset().top );
+		// NEED TO LEAVE PLACEHOLDER THAT SCROLLS WITH THE PAGE
+		// console.log( 289, bottomTop, topMargin );
+		if ( bottomTop <= topMargin ) {
+			// console.log("Fix nav.");
+			$("#bottom_header").appendTo( $("#bottom_header_fixed") );
+		} else {
+			// console.log("Unfix nav.");
+			$("#bottom_header").appendTo( $("#bottom_header_unfixed") );
+		}
 
-	// // CALCULATE MAIN LOGO SEPARATELY
-	var logoH = $("#main_logo").outerHeight(),
-		logoTop = bottomTop + $("#bottom_header_unfixed").height() - logoH;
-		console.log( 311, logoTop, topMargin );
-	if ( logoTop <= topMargin ) {
-		$("#main_logo").appendTo( $("#bottom_header_fixed") ).css({
-			"position" : "fixed",
-			"top" : topMargin, 
-			"bottom" : "initial"
-		});	
+		// // CALCULATE MAIN LOGO SEPARATELY
+		var logoH = $("#main_logo").outerHeight(),
+			logoTop = bottomTop + $("#bottom_header_unfixed").height() - logoH;
+			console.log( 311, logoTop, topMargin );
+		if ( logoTop <= topMargin ) {
+			$("#main_logo").appendTo( $("#bottom_header_fixed") ).css({
+				"position" : "fixed",
+				"top" : topMargin, 
+				"bottom" : "initial"
+			});	
+		} else {
+			$("#main_logo").appendTo( $("#bottom_header_unfixed") ).css({
+				"position" : "",
+				"top" : "", 
+				"bottom" : ""
+			});	
+		}
 	} else {
-		$("#main_logo").appendTo( $("#bottom_header_unfixed") ).css({
-			"position" : "",
-			"top" : "", 
-			"bottom" : ""
-		});	
+		console.log( 389, "Append to fixed wrapper." );
+		$("#bottom_header").appendTo( $("#bottom_header_fixed") );
 	}
 
 }
@@ -371,10 +399,10 @@ function navHighlight () {
 	// GET CURRENT
 	var currId = parseInt( $("#wrapper").attr("data-current") );
 	// RESET SIBLINGS
-	$("#bottom_header li").removeClass("highlight");
+	$("#bottom_header a").removeClass("highlight");
 	// IF NOT HOME LINK
 	if ( currId !== 1 ) {
-		$("#bottom_header [data-id='" + currId + "']").parent().addClass("highlight");
+		$("#bottom_header [data-id='" + currId + "']").addClass("highlight");
 	}
 }
 
@@ -383,6 +411,7 @@ function navHighlight () {
 function navClick ( targetId ) {
 	console.log( "navClick", targetId );
 	var currentId = parseInt( $(".current").attr("data-content") );
+	console.log( 403, currentId );
 	// IF TARGET IS VISIBLE
 	if ( targetId === currentId ) {
 		// SCROLL TO TOP OF CURRENT
@@ -390,15 +419,7 @@ function navClick ( targetId ) {
 	// ELSE NAV TO SECTION
 	} else {
 		console.log("NAV TO SECTION");
-	
-
-
-		// HERE!!!!!
-
-
-
-
-
+		navToSection( targetId );
 	}
 }
 
