@@ -2,6 +2,45 @@
     IN PROGRESS
 ************************************************/
 
+### MEDIA QUERIES
+	### SMARTPHONE MENU
+	### IMAGE GRID CHANGES
+
+### COLLECTION
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### STOP NEXT SCROLLING WHEN CURRENT IS STILL VISIBLE
 
 ### HOME
@@ -12,8 +51,7 @@
 
 ### RE-RUN IMAGEGRID ON FILTER
 
-### MEDIA QUERIES
-	### SMARTPHONE MENU
+
 
 
 

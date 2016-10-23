@@ -68,7 +68,6 @@ var winH = $(window).height()
 		console.log("_scrollDown", $("#wrapper").attr("data-current"));
 
 		var current = $(".current"),
-			winH = $(window).height(),
 			currTop = parseInt( current.css('transform').split(',')[5] ),
 			currH = $(".current").outerHeight(),
 			multiple = 1,
@@ -219,7 +218,7 @@ function imageManager ( img ) {
     } else {
     	// console.log( 196, "Run on all images.");
 		// LOOP THROUGH IMAGES
-		$("img").each( function(i){
+		$(".loaded img").each( function(i){
 			imageResizer( $(this) );
 		});
     }
@@ -268,12 +267,14 @@ function contentLoader ( target ) {
 	// RUN ON PAGE LOAD / SWITCHCLASSES / NAVCLICK
 	if (typeof target !== 'undefined') {
 		// IF TARGET DEFINED
-		// console.log( 269, "Load " +  target);
 		$("#" + target).show().addClass("loaded");
+		// CALCULATE IMAGE SIZES FOR LOADED IMAGES
+		imageManager();
 	} else {
 		// ELSE LOAD NEXT IN LINE
-		// console.log( 271, "Load next in line.");
 		$(".current").prev().show().addClass("loaded");
+		// CALCULATE IMAGE SIZES FOR LOADED IMAGES
+		imageManager();
 	}
 }
 
@@ -353,7 +354,7 @@ function navToSection ( section ) {
 function bottomNavCheck () {
 	// console.log("bottomNavCheck");
 	// ONLY RUN IF SCREEN IS WIDER THAN 500PX
-	if ( $(window).width() > 500 ) {
+	if ( winW > 500 ) {
 		// GET HEIGHT OF TOP NAV
 		var topMargin = $("#top_header").outerHeight();
 		// GET CURRENT TOP POSITION OF BOTTOM NAV
@@ -668,8 +669,7 @@ function homeClick ( click ) {
 		click.siblings(".home_text").show();
 	} else {
 		// CALCULATE POSITION – ALL FIGURES IN PERCENTAGES
-		var winW = $(window).width(),
-			leftMargin = Math.floor( click.position().left / winW * 100 ), 
+		var leftMargin = Math.floor( click.position().left / winW * 100 ), 
 			imgW = Math.floor( click.width() / winW * 100 ), 
 			rightMargin = 100 - ( leftMargin + imgW ),
 			leftPos,
@@ -692,6 +692,11 @@ function homeClick ( click ) {
 				// STICK TO RIGHT
 				leftPos = 100 - imgW;
 			}
+		}
+		// IF WINDOW WIDTH IS SMALLER THAN 500px
+		if ( winW < 500 ) {
+			leftPos = 20;
+			topPos = 10;
 		}
 		click.siblings(".home_text").attr({
 			"data-left" : leftPos,

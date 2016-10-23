@@ -125,6 +125,7 @@ $("#bottom_header a").on("click", function(e){
 		$("html, body").animate({
 			scrollTop : 0
 		}, 100 );
+		bottomNavCheck();
 		homeImages();
 		// gridManager();
 		imageManager();
