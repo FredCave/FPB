@@ -1,13 +1,13 @@
 <?php
 
-function pb_archive_filter () { ?>
+function pb_archive_filter ( $trads ) { ?>
 	<div class="filter">
 		<?php	
 		$terms = get_terms( array (
 		    'taxonomy' => 'archive-cat',
 		    'exclude'  => 1 // UNCATEGORIZED
 		) ); 
-		echo "<select><option value='0' selected>Todos</option>";
+		echo "<select><option value='0' selected>" . $trads["trad_all"][1] . "</option>";
 		?>		
 		<?php
 		foreach ( $terms as $term ) { ?>

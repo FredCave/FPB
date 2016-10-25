@@ -1,5 +1,17 @@
 <?php
 
+function pb_get_exhib_intro () {
+	$pub_query = new WP_Query( "name=exposiciones" );
+	if ( $pub_query->have_posts() ) :
+		while ( $pub_query->have_posts() ) : $pub_query->the_post(); ?>	
+			<h2><?php the_title(); ?></h2>
+			<div><?php the_content(); ?></div>
+		<?php
+		endwhile;
+		wp_reset_postdata();
+	endif;	
+}
+
 function pb_get_exhib_banner () {
 	$banner_query = new WP_Query( "post_type=exhibitions" );
 	if ( $banner_query->have_posts() ) :

@@ -2,18 +2,16 @@
     IN PROGRESS
 ************************************************/
 
-### MEDIA QUERIES
-	### SMARTPHONE MENU
-	### IMAGE GRID CHANGES
+ 
+### OPEN SPECIFIC EXHIBITION ON HOME CLICK
 
-### COLLECTION
+### LAG BEFORE SCROLLING UP BETWEEN SECTIONS
 
+### PASSWORD ARE YOU SURE YOU WANT TO SUBMIT THIS FORM AGAIN
 
+### BLOCK INNER SCROLLING OF CURRENT ON SCROLL UP
 
-
-
-
-
+### MOBILE VERSION
 
 
 
@@ -33,15 +31,6 @@
 
 
 
-
-
-
-
-
-
-
-
-### STOP NEXT SCROLLING WHEN CURRENT IS STILL VISIBLE
 
 ### HOME
 	### POSSIBILITY TO SCROLL WITH VIDEO
@@ -80,10 +69,6 @@
     TO DO
 ************************************************/
 
-
-
-### STORE ALL STATIC STRINGS IN POST FOR TRANSLATION
-
 ### MORE IMAGE SIZES : EXTRA LARGE + PORTRAIT SIZE
 
 ### ADD HASHTAG NAVIGATION – BACK + FORWARD
@@ -101,6 +86,8 @@
 /************************************************
     COMPLETED
 ************************************************/
+
+### STORE ALL STATIC STRINGS IN POST FOR TRANSLATION
 
 ### COLLECTION FILTER
 	

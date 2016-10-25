@@ -2,9 +2,10 @@
 
 <div id="exposiciones" class="wrapper">
 
-	<div class="col">
-		<h2>Exposiciones</h2>
-	</div>
+	<!-- INTRO TEXT -->
+	<div class="col_1 col">
+		<?php pb_get_exhib_intro(); ?>
+	</div><!-- END OF .COL_1 -->
 
 	<!-- PREVIEW BANNER -->
 	<div id="exhibitions_banner" class="banner">

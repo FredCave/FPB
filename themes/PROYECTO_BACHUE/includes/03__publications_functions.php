@@ -40,6 +40,14 @@ function pb_get_pub_list () {
 	if ( $list_query->have_posts() ) :
 		while ( $list_query->have_posts() ) : $list_query->the_post(); ?>	
 			<li id="<?php echo get_post()->ID; ?>" class="list_post">
+				<div class="col col_2">
+					<div class="pub_image">
+						<?php
+						$image = get_field( "publication_image" ); 
+						pb_image_object( $image );
+						?>
+					</div>
+				</div>
 				<div class="col col_1">
 					<div class="pub_list_title">
 						<h1><?php the_title(); ?></h1>
@@ -80,14 +88,6 @@ function pb_get_pub_list () {
 						</a>
 					<?php } ?>
 
-				</div>
-				<div class="col col_2">
-					<div class="pub_image">
-						<?php
-						$image = get_field( "publication_image" ); 
-						pb_image_object( $image );
-						?>
-					</div>
 				</div>
 
 				<?php // SPREADS - ONLY IF NO PDF -->

@@ -11,35 +11,34 @@ function pb_get_password () {
 	endif;
 }
 
-function pb_password_form() { ?>
-	<p>To see the collection, enter your password here</p>	
-	<form id="password_form" method="post" name="password-form" data-hash="<?php echo pb_get_password(); ?>">
-		<?php pb_get_password(); ?>
-		<label>Password :</label>
-		<input class="text_input" type="password" name="password" id="password_input"/>
-		<input type="button" value="Login" id="password_submit" onclick="passCheck()"/>
-	</form>
+function pb_password_form( $trads ) { ?>
+	<p><?php echo $trads["trad_enter"][1]; ?></p>
+	<div id="pword_form" data-hash="<?php echo pb_get_password(); ?>">
+		<label><?php echo $trads["trad_pass"][1]; ?> :</label>
+		<input class="text_input" id="pword_input"/>
+		<input type="button" value="<?php echo $trads["trad_login"][1]; ?>" id="pword_submit" onclick="passCheck()"/>
+	</div>
 	<!-- ERROR MESSAGE -->
 	<div id="error_message"></div>
 	<?php
 }
 
-function pb_coll_filter () {
+function pb_coll_filter ( $trads ) {
 	?>
 	<form id="coll_search" method="post" name="collection-search">
-		<label>Search :</label>
+		<label><?php echo $trads["trad_search"][1]; ?> :</label>
 		<input class="text_input" type="search" name="search" id="search_input"/>
 	</form>
 	<div class="filter">
 		<?php 
 		// FILTER BY MEDIUM
-		echo "Media: ";
+		echo $trads["trad_med"][1] . ": ";
 		$types = get_terms( array (
 		    'taxonomy' 	=> 'collection-cat',
 			'child_of' 	=> 22,
 		    'exclude'  	=> 1 // UNCATEGORIZED
 		) ); 
-		echo "<select><option value='0' selected>Todos</option>";
+		echo "<select class='type'><option value='0' selected>" . $trads["trad_all"][1] . "</option>";
 		?>		
 		<?php
 		foreach ( $types as $type ) { ?>
@@ -58,7 +57,7 @@ function pb_coll_filter () {
 			'child_of' 	=> 27,
 		    'exclude'  	=> 1 // UNCATEGORIZED
 		) ); 
-		echo "<select><option value='0' selected>Todos</option>";
+		echo "<select class='theme'><option value='0' selected>" . $trads["trad_all"][1] . "</option>";
 		?>		
 		<?php
 		foreach ( $themes as $theme ) { ?>
@@ -83,12 +82,14 @@ function pb_coll_list () {
 					// TYPE PARENT CATEGORY ID === 22
 					if ( $term->parent === 22 ) {
 						$type = $term->slug;
+					} else if ( $term->parent === 27 ) {
+						$theme = $term->slug;
 					}
 				}
 				$year = get_field( "coll_date" );
 				?>
 				<!-- ADD TITLE AND ARTIST IN INFO ATTRIBUTE -->
-				<li class="coll_post image_cell" data-row="" data-info="<?php echo $title . " " . $artist; ?>" data-type="<?php echo $type; ?>" data-year="<?php echo $year; ?>">
+				<li class="coll_post image_cell image_cell_toggle" data-row="" data-info="<?php echo $title . " " . $artist; ?>" data-type="<?php echo $type; ?>" data-theme="<?php echo $theme; ?>">
 					<?php if ( get_field( "coll_image" ) ) { ?>		
 						<div class="coll_image">
 							<?php 
