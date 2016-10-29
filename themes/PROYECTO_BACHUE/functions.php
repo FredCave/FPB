@@ -178,6 +178,35 @@ function pb_image_object( $image, $added_class ) {
     endif;
 }
 
+function pb_bg_image_object( $image, $added_class ) {
+    if( !empty($image) ): 
+        $width = $image['sizes'][ 'thumbnail-width' ];
+        $height = $image['sizes'][ 'thumbnail-height' ];
+        $thumb = $image['sizes'][ "thumbnail" ]; // 300
+        $medium = $image['sizes'][ "medium" ]; // 600
+        $large = $image['sizes'][ "large" ]; // 900
+        $id = $image["id"];
+        
+        $class = "landscape"; 
+        if ( $width <= $height ) {
+            $class = "portrait";
+            $thumb = $image['sizes'][ "medium" ];
+            $medium = $image['sizes'][ "large" ];
+            $large = $image['url']; 
+            // FIX THIS – ADD EXTRA LARGE CUSTOM SIZE
+        } ?>
+        <div 
+            data-thm="<?php echo $thumb; ?>"
+            data-med="<?php echo $medium; ?>" 
+            data-lrg="<?php echo $large; ?>"  
+            class="<?php echo $class . " bg_image " . $added_class ?>" 
+            alt='Fundación Proyecto Bachué' 
+            style="background-image:url('<?php echo $thumb; ?>')">
+        </div>
+        <?php
+    endif;
+}
+
 // TRANSLATIONS
 
 global $trads;

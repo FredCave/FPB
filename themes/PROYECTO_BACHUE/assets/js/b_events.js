@@ -162,11 +162,23 @@ $("#bottom_header a").on("click", function(e){
 		gridManager();
 		imageManager();
 		contentLoader(); 
-	}).on('scroll', _.throttle(function() {
-		// winScroll = $(window).scrollTop();
-	}, 500 )).on( "resize", _.throttle(function(){
+
+winHFix();
+
+
+	}).on('touchmove', _.throttle(function() {
+		var	wrapperCurrent = $("#wrapper").attr("data-current"); 
+		// if ( wrapperCurrent == 1 ) {
+		// 	$("#console p").append("3");
+		// 	bottomNavCheck();
+		// }
+		//$("#console p").append( wrapperCurrent );
+		bottomNavCheck();
+
+	}, 10 )).on( "resize", _.throttle(function(){
 		imageManager();
 		ifrHeight();
+		winHFix();
 	}, 500 ));
 
 // 4.2. MANUAL SCROLL EVENTS

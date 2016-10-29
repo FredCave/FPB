@@ -2,6 +2,20 @@
     IN PROGRESS
 ************************************************/
 
+### LOGO FIX
+
+### MOBILE VERSION ###
+###################### 
+
+### HOME VIDEO???
+### BOTTOM_HEADER FIX
+### LOGO WHITE BACKGROUND
+### BANNER LINK OPEN ANIMATION
+### BOTTOM LINKS NAVIGATION
+### EXHIBITION IMAGE GRID OPEN IMAGE SIZE
+### 1. The menu is not working and is taking a lot of space. Maybe use the regular Icon for the menu at the bottom left of the screen? So people start scrolling first
+### 2. I can't login to the collection from Iphone. I type the password but I can't press 'login'
+
  
 ### OPEN SPECIFIC EXHIBITION ON HOME CLICK
 
@@ -11,7 +25,6 @@
 
 ### BLOCK INNER SCROLLING OF CURRENT ON SCROLL UP
 
-### MOBILE VERSION
 
 
 

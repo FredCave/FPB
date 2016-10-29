@@ -34,6 +34,13 @@
 var winH = $(window).height()
 	winW = $(window).width();
 
+// MOBILE TMP
+
+function winHFix () {
+	$("section").css("min-height",winH);
+}
+
+
 /****************************************************************************
     
 	1. GENERAL
@@ -204,13 +211,26 @@ var winH = $(window).height()
 function imageResizer ( img ) {
 	console.log("imageResizer");
 	// CHANGE POINTS: THM = 300 / MED = 600 / LRG = 900
+	var thisSrc;
 	if ( img.width() <= 300 ) {
-		img.attr( "src", img.attr("data-thm") );
+		thisSrc = img.attr("data-thm");
 	} else if ( img.width() > 300 && img.width() <= 600 ) {
-		img.attr( "src", img.attr("data-med") );
+		thisSrc = img.attr("data-med");
 	} else {
-		img.attr( "src", img.attr("data-lrg") );
+		thisSrc = img.attr("data-lrg");
 	}
+	console.log( 214, thisSrc );
+	// IF BG IMAGE
+	if ( img.hasClass("bg_image") ) {
+		var bgSrc = "url('"+ thisSrc +"')";
+		console.log( 225, bgSrc );
+		img.css({
+			"background-image" : bgSrc 
+		});
+	} else {
+		img.attr("src",thisSrc);
+	}
+	img.removeClass("blurred");
 }
 
 function imageManager ( img ) {
@@ -225,6 +245,8 @@ function imageManager ( img ) {
 		$(".loaded img").each( function(i){
 			imageResizer( $(this) );
 		});
+		imageResizer( $(".bg_image") );
+
     }
 }
 
@@ -405,10 +427,12 @@ function bottomNavCheck () {
 	if ( winW > 500 ) {
 		// GET HEIGHT OF TOP NAV
 		var topMargin = $("#top_header").outerHeight();
-		// GET CURRENT TOP POSITION OF BOTTOM NAV
-		var bottomTop = Math.floor( $("#bottom_header_unfixed").offset().top );
+		// GET CURRENT TOP POSITION OF BOTTOM NAV RELATIVE TO WINDOW
+		// var bottomTop = Math.floor( $("#bottom_header_unfixed").offset().top );
+		var bottomTop = Math.floor( $("#bottom_header_unfixed")[0].getBoundingClientRect().top );
 		// NEED TO LEAVE PLACEHOLDER THAT SCROLLS WITH THE PAGE
 		// console.log( 289, bottomTop, topMargin );
+		$("#console p").append( bottomTop - topMargin + ", " );
 		if ( bottomTop <= topMargin ) {
 			// console.log("Fix nav.");
 			$("#bottom_header").appendTo( $("#bottom_header_fixed") );
@@ -417,28 +441,27 @@ function bottomNavCheck () {
 			$("#bottom_header").appendTo( $("#bottom_header_unfixed") );
 		}
 
-		// // CALCULATE MAIN LOGO SEPARATELY
-		var logoH = $("#main_logo").outerHeight(),
-			logoTop = bottomTop + $("#bottom_header_unfixed").height() - logoH;
-			// console.log( 311, logoTop, topMargin );
-		if ( logoTop <= topMargin ) {
-			$("#main_logo").appendTo( $("#bottom_header_fixed") ).css({
-				"position" : "fixed",
-				"top" : topMargin, 
-				"bottom" : "initial"
-			});	
-		} else {
-			$("#main_logo").appendTo( $("#bottom_header_unfixed") ).css({
-				"position" : "",
-				"top" : "", 
-				"bottom" : ""
-			});	
-		}
+	// 	// // CALCULATE MAIN LOGO SEPARATELY
+	// 	var logoH = $("#main_logo").outerHeight(),
+	// 		logoTop = bottomTop + $("#bottom_header_unfixed").height() - logoH;
+	// 		// console.log( 311, logoTop, topMargin );
+	// 	if ( logoTop <= topMargin ) {
+	// 		$("#main_logo").appendTo( $("#bottom_header_fixed") ).css({
+	// 			"position" : "fixed",
+	// 			"top" : topMargin, 
+	// 			"bottom" : "initial"
+	// 		});	
+	// 	} else {
+	// 		$("#main_logo").appendTo( $("#bottom_header_unfixed") ).css({
+	// 			"position" : "",
+	// 			"top" : "", 
+	// 			"bottom" : ""
+	// 		});	
+	// 	}
 	} else {
-		console.log( 389, "Append to fixed wrapper." );
+		// console.log( 389, "Append to fixed wrapper." );
 		$("#bottom_header").appendTo( $("#bottom_header_fixed") );
 	}
-
 }
 
 // 2.2. NAV SECTION HIGHLIGHTER
