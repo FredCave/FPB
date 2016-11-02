@@ -23,11 +23,19 @@ function collLoad () {
             // RUN FUNCTIONS ON LOAD
             gridManager();
             setTimeout( function(){
-                coll.find(".ajax_wrapper").fadeIn(2000);
+                coll.find(".content_wrapper").fadeIn(2000);
             }, 5000 );
+            // IF MOBILE SCROLL TO TOP OF COLLECTION
+            if ( $("#wrapper").hasClass("mobile") ) {
+                var collTop = $("#coll_list").offset().top;
+                $("html,body").animate({
+                    scrollTop : collTop
+                }, 500 );
+            }
         },
         error: function(errorThrown){
             console.log(errorThrown);
+            // $("#coll_content").append(errorThrown);
         }
     }); 
 

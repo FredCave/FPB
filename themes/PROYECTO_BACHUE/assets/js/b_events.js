@@ -31,7 +31,24 @@ $( document ).ready(function() {
 $("#bottom_header a").on("click", function(e){
 	e.preventDefault();
 	var thisId = $(this).data("id");
-	navClick( thisId );
+	if ( $("body").hasClass("mobile") ) {
+		// IF TOUCH
+		navClickMobile( thisId );
+	} else {
+		// IF NOT TOUCH
+		navClick( thisId );
+	}
+});
+
+$("#mobile_menu").on("click", function(){
+	mobileMenuOpen( $(this) );
+});
+
+	// CLICK OUTSIDE TO CLOSE
+
+$("section").click(function(e) {
+	// CLOSE MENU
+	mobileMenuClose();
 });
 
 /****************************************************************************
@@ -155,6 +172,10 @@ $("#bottom_header a").on("click", function(e){
 	var winScroll;
 
 	$(window).on("load", function(){
+		// SCROLL TO TOP
+		$("html,body").animate({
+			scrollTop : 0
+		}, 500 );
 		touchScreenCheck();
 		linkCheck();
 		bottomNavCheck();
@@ -162,8 +183,7 @@ $("#bottom_header a").on("click", function(e){
 		gridManager();
 		imageManager();
 		contentLoader(); 
-
-winHFix();
+		winHFix();
 
 
 	}).on('touchmove', _.throttle(function() {

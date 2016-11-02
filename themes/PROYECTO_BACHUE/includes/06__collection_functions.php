@@ -13,7 +13,7 @@ function pb_get_password () {
 
 function pb_password_form( $trads ) { ?>
 	<p><?php echo $trads["trad_enter"][1]; ?></p>
-	<div id="pword_form" data-hash="<?php echo pb_get_password(); ?>">
+	<div id="pword_form" data-hash="<?php echo pb_get_password(); ?>" onKeyPress="submitCheck(event)">
 		<label><?php echo $trads["trad_pass"][1]; ?> :</label>
 		<input class="text_input" id="pword_input"/>
 		<input type="button" value="<?php echo $trads["trad_login"][1]; ?>" id="pword_submit" onclick="passCheck()"/>

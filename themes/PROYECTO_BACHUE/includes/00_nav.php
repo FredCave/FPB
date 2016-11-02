@@ -8,3 +8,7 @@
 
 <div id="bottom_header_fixed"></div>
 
+<div id="mobile_menu">
+	<img src="<?php bloginfo('template_url'); ?>/img/menu_black.png" />
+</div>
+

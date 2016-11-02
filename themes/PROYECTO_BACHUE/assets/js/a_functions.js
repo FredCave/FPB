@@ -31,15 +31,8 @@
 
 *****************************************************************************/
 
-var winH = $(window).height()
+var winH = $(window).height(),
 	winW = $(window).width();
-
-// MOBILE TMP
-
-function winHFix () {
-	$("section").css("min-height",winH);
-}
-
 
 /****************************************************************************
     
@@ -111,13 +104,22 @@ function winHFix () {
 		var current = $(".current"),
 			currTop = parseInt( current.css('transform').split(',')[5] ),
 			currH = $(".current").outerHeight(),
-			multiple = 1;
+			multiple = 1,
+			newTop;
 		// console.log( 91, "currTop: ", currTop, "currScrollTop: ", current.scrollTop() )
-
 		console.log("Scrolling up.");
-		// CHECK IF CURRENT TOP > 0
+
+		// ADD SCROLL_BLOCK CLASS
+		current.addClass("scroll_block");
+
+		console.log( 119, "Current = ", $("#wrapper").attr("data-current"), currTop );
+		// IF CURRENT TOP (TRANSFORM) < 0 – CURRENT IS "ON THE WAY OUT"
+
 		if ( currTop < 0 && !$("#wrapper").hasClass("wheel_block") ) {
-			var newTop = currTop - ( delta * multiple );
+
+			console.log( 124, "Translate back." );
+
+			newTop = currTop - ( delta * multiple );
 			if ( newTop >= 0 ) {
 				newTop = 0;
 			}
@@ -126,46 +128,50 @@ function winHFix () {
   					"-ms-transform" : "translateY(" + newTop + "px)",
 						"transform" : "translateY(" + newTop + "px)"
 			});
-		} else {
-			// REMOVE SCROLLING CLASS
-			// console.log( 126, "Remove scroll_block class." );
-			current.removeClass("scroll_block");
 
-			// IF CURRENT SCROLLTOP IS 0 AND WRAPPER DATA-CURRENT IS NOT 1
-			// SWITCH CLASSES + ANIMATE
+		} else if ( currTop == 0 && !$("#wrapper").hasClass("wheel_block") ) {
 
+			console.log( 128, "Switch classes." );
+			// REMOVE SCROLL_BLOCK CLASS TO ALLOW INTERIOR SCROLLING
+			// current.removeClass("scroll_block");
+
+			// IF CURRENT INTERIOR SCROLLTOP IS 0 AND WRAPPER DATA-CURRENT IS NOT 1
+			// SWITCH CLASSES + TRANSFORM UP
 			if ( current.scrollTop() <= 0 && $("#wrapper").attr("data-current") != 1 ) {
-				if ( !$("#wrapper").hasClass("wheel_block")) {
-					console.log( 110, "Animate" );
-					// BLOCK SCROLLING
+				// CHECK IF WHEEL BLOCK – ADDED TO STOP CONSECUTIVE SWITCHCLASSES
+				if ( !$("#wrapper").hasClass("wheel_block") ) {
+					// ADD WHEEL_BLOCK
 					$("#wrapper").addClass("wheel_block");
-					// console.log("Wheel blocked.");
-					
 					// SWITCH CLASSES
 					_switchClasses("up");
-					$(".current").css({
-								"transition": "transform 1s",
-						"-webkit-transform" : "",
-			      			"-ms-transform" : "",
-								"transform" : ""			
+
+					newTop = currTop + ( delta * multiple );
+					if ( newTop < 0 ) {
+						newTop = 0;
+					}
+					console.log( 158, currTop, delta, newTop );
+
+					current.css({
+						"-webkit-transform" : "translateY(" + newTop + "px)",
+		  					"-ms-transform" : "translateY(" + newTop + "px)",
+								"transform" : "translateY(" + newTop + "px)"
 					});
+
 					// RUN NAV CHECK DURING ANIMATION
-					setTimeout( function(){
-						bottomNavCheck();	
-					}, 200 );
+					bottomNavCheck();	
+
 					setTimeout( function(){
 						$("#wrapper").removeClass("wheel_block");
-						// console.log("Wheel unblocked.");
-						$(".current").css({
-								"transition": ""		
-						});
+						console.log("Wheel unblocked.");
+					}, 500 );
 
-					}, 1500 );
 				}
+			} else if ( current.scrollTop() != 0  ) {
+				// NORMAL SCROLLING
+				current.removeClass("scroll_block");	
 			}
 
-		}
-
+		} 
 	}
 
 	function _scrollDetect(delta) {
@@ -179,7 +185,6 @@ function winHFix () {
 		if ( delta > 0 ) {
 			console.log( 155, "Scrolling down." );
 			// IF CURRENT AT BOTTOM (OR TOP)
-			console.log( 158, "Current at bottom.", current.scrollTop() + current.innerHeight(), current[0].scrollHeight );
 			if ( current.scrollTop() + current.innerHeight() >= current[0].scrollHeight - 10 ) {
 				// IF NOT LAST SECTION
 				if ( wrapperCurrent != 6 ) {
@@ -192,16 +197,18 @@ function winHFix () {
 			}
 		// IF SCROLLING UP
 		} else if ( delta < 0 ) {
-			console.log( 169, "Scrolling up." );
+			console.log( 169, "Scrolling up.", current.scrollTop() );
 			// IF CURRENT AT TOP 
-			if ( current.scrollTop() <= 20 ) {
-				console.log( 158, "Current at top(<20)." );
+			console.log( 203, current.scrollTop() );
+			// if ( current.scrollTop() <= 20 ) {
+				// console.log( 158, "Current at top(<20)." );
 				_scrollUp(delta);
-			} else {
-				console.log("Normal scrolling.");
-				// ALLOW CURRENT TO SCROLL NORMALLY
-				current.removeClass("scroll_block");				
-			}
+			// } 
+			// else {
+			// 	console.log("Normal scrolling.");
+			// 	// ALLOW CURRENT TO SCROLL NORMALLY
+			// 	current.removeClass("scroll_block");				
+			// }
 		}
 
 	}
@@ -211,10 +218,22 @@ function winHFix () {
 function imageResizer ( img ) {
 	console.log("imageResizer");
 	// CHANGE POINTS: THM = 300 / MED = 600 / LRG = 900
-	var thisSrc;
-	if ( img.width() <= 300 ) {
+	var thisSrc,
+		imgW;
+	if ( img.hasClass("bg_image") ) {
+		// GET REAL HEIGHT OF IMAGE
+		var ratio = img.attr("data-ratio");
+		// IF WIN IS VERTICAL
+		if ( winW < winH ) {
+			imgW = winH * ratio;
+			console.log( 238, imgW, winH * ratio );
+		}
+	} else {
+		imgW = img.width();
+	}	
+	if ( imgW <= 300 ) {
 		thisSrc = img.attr("data-thm");
-	} else if ( img.width() > 300 && img.width() <= 600 ) {
+	} else if ( imgW > 300 && imgW <= 600 ) {
 		thisSrc = img.attr("data-med");
 	} else {
 		thisSrc = img.attr("data-lrg");
@@ -223,14 +242,15 @@ function imageResizer ( img ) {
 	// IF BG IMAGE
 	if ( img.hasClass("bg_image") ) {
 		var bgSrc = "url('"+ thisSrc +"')";
-		console.log( 225, bgSrc );
 		img.css({
 			"background-image" : bgSrc 
 		});
 	} else {
 		img.attr("src",thisSrc);
 	}
-	img.removeClass("blurred");
+	setTimeout( function(){
+		img.removeClass("blurred");		
+	}, 500 );
 }
 
 function imageManager ( img ) {
@@ -406,12 +426,22 @@ function touchScreenCheck () {
 	    // TOUCH SCREEN
 	    $("body").addClass("mobile");
     } else {
-		console.log("Not touch.");
+		// console.log("Not touch.");
     }
-	var classes = $("body").attr("class");
-	$("#console p").text(classes);
+	// var classes = $("body").attr("class");
+	// $("#console p").text(classes);
 
 }
+
+// 1.9. SECTIONS RESIZE
+
+function winHFix () {
+	console.log("winHFix", winH);
+	winH = $(window).height();
+	$("section").css("min-height",winH);
+	$("#home").css("height",winH);
+}
+
 
 /****************************************************************************
     
@@ -431,33 +461,30 @@ function bottomNavCheck () {
 		// var bottomTop = Math.floor( $("#bottom_header_unfixed").offset().top );
 		var bottomTop = Math.floor( $("#bottom_header_unfixed")[0].getBoundingClientRect().top );
 		// NEED TO LEAVE PLACEHOLDER THAT SCROLLS WITH THE PAGE
-		// console.log( 289, bottomTop, topMargin );
 		$("#console p").append( bottomTop - topMargin + ", " );
 		if ( bottomTop <= topMargin ) {
-			// console.log("Fix nav.");
 			$("#bottom_header").appendTo( $("#bottom_header_fixed") );
 		} else {
-			// console.log("Unfix nav.");
 			$("#bottom_header").appendTo( $("#bottom_header_unfixed") );
 		}
 
-	// 	// // CALCULATE MAIN LOGO SEPARATELY
-	// 	var logoH = $("#main_logo").outerHeight(),
-	// 		logoTop = bottomTop + $("#bottom_header_unfixed").height() - logoH;
-	// 		// console.log( 311, logoTop, topMargin );
-	// 	if ( logoTop <= topMargin ) {
-	// 		$("#main_logo").appendTo( $("#bottom_header_fixed") ).css({
-	// 			"position" : "fixed",
-	// 			"top" : topMargin, 
-	// 			"bottom" : "initial"
-	// 		});	
-	// 	} else {
-	// 		$("#main_logo").appendTo( $("#bottom_header_unfixed") ).css({
-	// 			"position" : "",
-	// 			"top" : "", 
-	// 			"bottom" : ""
-	// 		});	
-	// 	}
+		// CALCULATE MAIN LOGO SEPARATELY
+		var logoH = $("#main_logo").outerHeight(),
+			logoTop = bottomTop + $("#bottom_header_unfixed").height() - logoH;
+			// console.log( 311, logoTop, topMargin );
+		if ( logoTop <= topMargin ) {
+			$("#main_logo").appendTo( $("#bottom_header_fixed") ).css({
+				"position" : "fixed",
+				"top" : topMargin, 
+				"bottom" : "initial"
+			});	
+		} else {
+			$("#main_logo").appendTo( $("#bottom_header_unfixed") ).css({
+				"position" : "",
+				"top" : "", 
+				"bottom" : ""
+			});	
+		}
 	} else {
 		// console.log( 389, "Append to fixed wrapper." );
 		$("#bottom_header").appendTo( $("#bottom_header_fixed") );
@@ -493,6 +520,46 @@ function navClick ( targetId ) {
 		console.log("NAV TO SECTION");
 		navToSection( targetId );
 	}
+}
+
+function navClickMobile ( targetId ) {
+	console.log("navClickMobile");
+	// GET OFFSET OF TARGET
+	var offsetTop = $("#section_" + targetId).offset().top;
+	// RUN BOTTOM NAV CHECK DURING ANIMATION
+	var navInterval = 0;
+	navInterval = setInterval( function(){
+		bottomNavCheck();
+	}, 10 );
+	// SCROLL TO
+	$("html,body").animate({
+		scrollTop: offsetTop
+	}, 500, function(){
+		clearInterval(navInterval);
+	});
+
+}
+
+// 2.4. MOBILE MENU
+
+function mobileMenuOpen( click ) {
+	console.log("mobileMenuOpen");
+	if ( !click.hasClass("clicked") ) {
+		$("#bottom_header_fixed").css({
+			"-webkit-transform" : "translateY(0)",
+					"transform" : "translateY(0)"
+		});	
+		click.addClass("clicked");
+	} 
+}
+
+function mobileMenuClose() {
+	console.log("mobileMenuClose");
+	$("#bottom_header_fixed").css({
+		"-webkit-transform" : "",
+				"transform" : ""
+	});	
+	$("#mobile_menu").removeClass("clicked");	
 }
 
 /****************************************************************************
@@ -919,8 +986,18 @@ function passCheck (e) {
 		// DISPLAY ERROR – TOO MANY ATTEMPTS
 		$("#error_message").text("Too many attempts. Try again later.");
 	}
-	e.preventDefault();
+	// e.preventDefault();
 	return false;
+}
+
+	// SUBMIT ON RETURN PRESS
+
+function submitCheck (e) {
+	console.log( 959, e );
+	if(e && e.keyCode == 13) {
+		// e.preventDefault();
+		passCheck();
+	}
 }
 
 // 6.3. COLLECTION FILTER

@@ -182,6 +182,7 @@ function pb_bg_image_object( $image, $added_class ) {
     if( !empty($image) ): 
         $width = $image['sizes'][ 'thumbnail-width' ];
         $height = $image['sizes'][ 'thumbnail-height' ];
+        $ratio = $width / $height;
         $thumb = $image['sizes'][ "thumbnail" ]; // 300
         $medium = $image['sizes'][ "medium" ]; // 600
         $large = $image['sizes'][ "large" ]; // 900
@@ -198,7 +199,8 @@ function pb_bg_image_object( $image, $added_class ) {
         <div 
             data-thm="<?php echo $thumb; ?>"
             data-med="<?php echo $medium; ?>" 
-            data-lrg="<?php echo $large; ?>"  
+            data-lrg="<?php echo $large; ?>" 
+            data-ratio="<?php echo $ratio; ?>"  
             class="<?php echo $class . " bg_image " . $added_class ?>" 
             alt='Fundación Proyecto Bachué' 
             style="background-image:url('<?php echo $thumb; ?>')">
