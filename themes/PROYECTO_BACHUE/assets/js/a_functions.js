@@ -18,9 +18,9 @@
 			3.2. IMAGE GRID TOGGLE
 		4. HOME
 			4.1. HOME IMAGE PLACEMENT
-			4.2. HOME IMAGES HOVER
-			4.3. HOME IMAGES CLICK
-			4.4. HOME LINK OPEN
+			4.2. HOME SLIDESHOW
+			4.3. HOME LINK 
+			4.4. HOME VIDEO
 		5. PUBLICATIONS + EXHIBITIONS
 			5.1. BANNER LINKS
 		6. ARCHIVE + COLLECTIONS
@@ -217,7 +217,6 @@ var winH = $(window).height(),
 
 function imageResizer ( img ) {
 	console.log("imageResizer");
-	// CHANGE POINTS: THM = 300 / MED = 600 / LRG = 900
 	var thisSrc,
 		imgW;
 	if ( img.hasClass("bg_image") ) {
@@ -226,11 +225,11 @@ function imageResizer ( img ) {
 		// IF WIN IS VERTICAL
 		if ( winW < winH ) {
 			imgW = winH * ratio;
-			console.log( 238, imgW, winH * ratio );
 		}
 	} else {
 		imgW = img.width();
 	}	
+	// CHANGE POINTS: THM = 300 / MED = 600 / LRG = 900
 	if ( imgW <= 300 ) {
 		thisSrc = img.attr("data-thm");
 	} else if ( imgW > 300 && imgW <= 600 ) {
@@ -265,8 +264,8 @@ function imageManager ( img ) {
 		$(".loaded img").each( function(i){
 			imageResizer( $(this) );
 		});
-		imageResizer( $(".bg_image") );
-
+		// RUN ON FIRST IMAGE IN SLIDESHOW
+		imageResizer( $(".visible .bg_image") );
     }
 }
 
@@ -745,123 +744,62 @@ function gridClose ( click ) {
 
 *****************************************************************************/
 
-// 4.1. HOME IMAGE PLACEMENT
+// 4.1. HOME TEXT PLACEMENT
 
-function homeImages () {
+function homeTextPos () {
 	console.log("homeImages");
-
-	var img = $(".current #home_multiple_images li"),
-		maxW = 67, // PERCENTAGE
-		heightArray = [],
-		noImages = img.length,
-		tranche = maxW / noImages,
-		i = 0;
-
-	// FILL HEIGHT ARRAY
-	while ( i < noImages ) {
-		randH = Math.random() * tranche;
-		// console.log( 470, tranche, randH, tranche * i );		
-		height = randH + ( tranche * i );
-		if ( height > 67 ) {
-			height = height - ( Math.random() * 25 + 25 );
-		}
-		heightArray.push( height );
-		i++;
-	}
-	// SHUFFLE HEIGHT ARRAY
-	heightArray = _.shuffle(heightArray);
-
-	// LOOP THROUGH LI
-	img.each( function(i){
-		var rand = Math.random() * tranche / 2 + ( tranche / 4 );
-		thisLeft = rand + ( tranche * i );
-		thisTop = heightArray[i],
-		thisBottom = ( thisTop / 100 * img.parents(".content_wrapper").height() ) + $(this).height(),	
-		bottomMax = img.parents(".content_wrapper").height();
-		if ( thisBottom > bottomMax ) {
-			console.log( 530, "Image too low.");
-			thisTop = thisTop * 0.8;
-		}
-		$(this).css({
-			"top" : thisTop + "%",
-			"left" : thisLeft + "%"
-		});
-	});
-
-	// FADE IN IMAGES
-	img.animate({
-		"opacity": 1
-	}, 500);
-
-}
-
-	// 4.2. HOME IMAGES HOVER
-
-function homeHover ( home_post ) {
-	console.log("homeHover");
-	var currZ = parseInt( home_post.css("z-index") );
-	home_post.css({ "z-index": currZ + 1 }).siblings("li").css({ "z-index": "1" });
-}
-
-	// 4.3. HOME IMAGES CLICK
-
-function homeClick ( click ) {
-	console.log("homeClick");
-	var link = click.data("link");
-	// CLOSE ANY OTHER OPEN TEXT BLOCKS
-	$(".home_text").hide();
-	// IF NO TEXT BLOCK
-	if ( !click.next(".home_text").length ) {
-		console.log("No text block.", link);
-		// SCROLL DOWN TO LINK
-		homeLinkOpen(link);
-		return;
-	}
-	// CHECK IF POSITION HAS ALREADY BEEN CALCULATED
-	if ( click.siblings(".home_text").attr("data-left").length && click.siblings(".home_text").attr("data-top").length ) {
-		// SHOW BLOCK
-		click.siblings(".home_text").show();
-	} else {
-		// CALCULATE POSITION – ALL FIGURES IN PERCENTAGES
-		var leftMargin = Math.floor( click.position().left / winW * 100 ), 
-			imgW = Math.floor( click.width() / winW * 100 ), 
-			rightMargin = 100 - ( leftMargin + imgW ),
-			leftPos,
-			topPos = Math.floor( Math.random() * 67 );
-		if ( leftMargin > rightMargin ) {
-			// SHOW ON LEFT
-			if ( leftMargin > imgW ) {
-				// CENTRE ON LEFT
-				leftPos = ( leftMargin - imgW ) / 2;
-			} else {
-				// STICK TO LEFT
-				leftPos = 0;
-			}
-		} else {
-			// SHOW ON RIGHT
-			if ( rightMargin > imgW ) {
-				// CENTRE ON RIGHT
-				leftPos = rightMargin + ( ( rightMargin - imgW ) / 2 );
-			} else {
-				// STICK TO RIGHT
-				leftPos = 100 - imgW;
-			}
-		}
-		// IF WINDOW WIDTH IS SMALLER THAN 500px
-		if ( winW < 500 ) {
-			leftPos = 20;
-			topPos = 10;
-		}
-		click.siblings(".home_text").attr({
-			"data-left" : leftPos,
-			"data-top" : topPos
-		}).css({
-			"display" : "block",
+	if ( winW > 500 ) {
+		// GET WIDTH OF TEXT BLOCK
+		var textW = $(".home_text").css("width"); // IN PIXELS
+		// CALC RANDOM LEFT PERCENTAGE
+		var leftPos = Math.random() * ( 1 - ( parseInt(textW) / $(window).width() ) ) * 100,
+			topPos = Math.floor( Math.random() * 62 ) + 5;
+		console.log( 756, textW, leftPos );
+		$(".home_text").css({
 			"left" : leftPos + "%",
 			"top" : topPos + "%"
-		});
+		}).show();
+	} else {
+		$(".home_text").show();		
 	}
 }
+
+// 4.2. HOME IMAGES SLIDESHOW
+
+function loadNext ( nextLi ) {
+	var nextImg = nextLi.find(".bg_image");
+	if ( nextImg.hasClass("blurred") ) {
+		console.log("loadNext");
+		imageResizer( nextImg );
+	}
+}
+
+function homeSlideInit () {
+	console.log("homeSlideInit");
+	var gallery = $("#home_slideshow"),
+		initDelay = 2000,
+		interval = 5000;
+	// LOAD NEXT
+	loadNext( gallery.find(".visible").next() );
+	// DELAY AND THEN INITIATE SLIDESHOW
+	setTimeout( function(){
+		setInterval( function(){
+			// IF NEXT EXISTS
+			if ( gallery.find(".visible").next().length ) {			
+				// MAKE NEXT VISIBLE
+				gallery.find(".visible").removeClass("visible").next().addClass("visible");
+				// LOAD NEXT
+				loadNext( gallery.find(".visible").next() );
+			} else {		
+				// GO BACK TO BEGINNING
+				gallery.find(".visible").removeClass("visible");
+				gallery.find("li:first-child").addClass("visible");				
+			}
+		}, interval );		
+	}, initDelay );
+}
+
+// 4.3. HOME LINK
 
 function homeLinkOpen ( link ) {
 	console.log("homeLinkOpen");
@@ -872,10 +810,13 @@ function homeLinkOpen ( link ) {
 			targetId;
 		// SCROLL TO SECTION
 		navToSection( section );
-		// SCROLL TO POST
-		console.log( 664, "Scroll to post." );
+		// AFTER 1 SECOND SCROLL TO POST
+		setTimeout( function(){
+			// TRIGGER CLICK ON BANNER LINK
+			bannerLink( $("[data-link="+post+"]") ).trigger("click");
+		}, 1000 );
 	} else if ( link.substring(0,4) === "http" ) {
-		console.log("external");		
+		console.log("external");
 	}
 }
 
@@ -883,6 +824,86 @@ function homeClose () {
 	console.log("homeClose");
 	$(".home_text").hide();
 }
+
+// 4.4. HOME VIDEO
+
+// CREATE AN IFRAME AFTER THE API CODE DOWNLOADS
+var player;
+function onYouTubeIframeAPIReady() {
+	console.log( 843, "onYouTubeIframeAPIReady" );
+	// GET VIDEO ID
+	var vidId = $("#player").attr("data-id");
+	player = new YT.Player("player", {
+		height: '390',
+		width: '640',
+		videoId: vidId,
+		events: {
+			'onReady': onPlayerReady,
+			'onStateChange': onPlayerStateChange
+		},
+		playerVars: {
+        	playlist: vidId,
+        	loop: 1
+      	}
+	});
+
+}
+
+// THE API WILL CALL THIS FUNCTION WHEN THE VIDEO PLAYER IS READY
+function onPlayerReady(event) {
+	// var vidId = $("#player").attr("data-id");
+	// event.target.cuePlaylist(playlist:vidId);
+	event.target.playVideo();
+	event.target.mute();
+}
+
+// THE API CALLS THIS FUNCTION WHEN THE PLAYER'S STATE CHANGES
+function onPlayerStateChange(event) {
+	if ( event.data == YT.PlayerState.PLAYING ) {
+		// console.log( 865, "PLAY" );
+		playVideo();
+	}
+}
+
+function playVideo () {
+	console.log("playVideo");
+	// MAKE IFRAME FIT TO SCREEN
+	$("#player").removeClass("paused");
+	// SHOW BUTTON
+	$("#home_video_button").find("play").hide();
+	$("#home_video_button").find("pause").show();
+	$("#home_video_button").fadeIn();
+
+}
+
+function pauseVideo () {
+	console.log("pauseVideo");
+	player.pauseVideo();
+	// HIDE BUTTON
+	$("#home_video_button").fadeOut();
+	$("#home_video_button").find("pause").hide();
+	$("#home_video_button").find("play").show();
+	// MAKE IFRAME SMALLER
+	$("#player").addClass("paused");
+}
+
+function loadVideo () {
+	console.log("loadVideo");
+	// CHECK IF HOME_VIDEO DIV
+	if ( $("#player").length ) {
+		console.log("Video is present.");
+		// LOAD THE IFRAME PLAYER API CODE ASYNCHRONOUSLY
+		var tag = document.createElement('script');
+		tag.src = "https://www.youtube.com/iframe_api";
+		var firstScriptTag = document.getElementsByTagName('script')[0];
+		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+	} // END OF IF #PLAYER CHECK
+
+}
+
+
+
+// DETECT PLAY AND REMAKE FULL SIZE
 
 /****************************************************************************
     
@@ -1026,14 +1047,16 @@ function collFilter ( menu, value ) {
 		// SHOW ALL POSTS
 		$(".coll_post").show().removeClass("hidden");
 	} else {
-		// console.log( "Show only: ", $("[data-type='" + value + "']") );
+		console.log( "Show only: ", value );
 		// HIDE ALL POSTS
 		$(".coll_post").hide().addClass("hidden");
-		// SHOW ONLY POSTS WITH ID
-		if ( menu === "type" ) {
-			$("[data-type='" + value + "']").show().removeClass("hidden");	
-		} else if ( menu === "theme" ) {
-			$("[data-theme='" + value + "']").show().removeClass("hidden");
-		}
+		// LOOP THROUGH POSTS
+		$(".coll_post").each( function(){
+			// IF DATA-CLASS CONTAINS VALUE
+			var dataClass = $(this).attr("data-class");
+			if ( dataClass.indexOf(value) >= 0 ) {
+				$(this).show().removeClass("hidden");	
+			}
+		});
 	}
 }

@@ -29,45 +29,34 @@ function pb_coll_filter ( $trads ) {
 		<label><?php echo $trads["trad_search"][1]; ?> :</label>
 		<input class="text_input" type="search" name="search" id="search_input"/>
 	</form>
-	<div class="filter">
-		<?php 
-		// FILTER BY MEDIUM
-		echo $trads["trad_med"][1] . ": ";
-		$types = get_terms( array (
-		    'taxonomy' 	=> 'collection-cat',
-			'child_of' 	=> 22,
-		    'exclude'  	=> 1 // UNCATEGORIZED
-		) ); 
-		echo "<select class='type'><option value='0' selected>" . $trads["trad_all"][1] . "</option>";
-		?>		
-		<?php
-		foreach ( $types as $type ) { ?>
-			<option value="<?php echo $type->slug; ?>"><?php echo $type->name; ?></option>
-		<?php
-		}
-		echo "</select>"; 
-		?>
-	</div>
-	<div class="filter">
-		<?php
-		// FILTER BY THEME
-		echo "Tema: ";
-		$themes = get_terms( array (
-		    'taxonomy' 	=> 'collection-cat',
-			'child_of' 	=> 27,
-		    'exclude'  	=> 1 // UNCATEGORIZED
-		) ); 
-		echo "<select class='theme'><option value='0' selected>" . $trads["trad_all"][1] . "</option>";
-		?>		
-		<?php
-		foreach ( $themes as $theme ) { ?>
-			<option value="<?php echo $theme->slug; ?>"><?php echo $theme->name; ?></option>
-		<?php
-		}
-		echo "</select>";
-		?>
-	</div>
-	<?php
+	<?php 
+	// CREATE DROPDOWN MENU FOR EACH CATEGORY
+	$parents = get_terms( array (
+	    'taxonomy' 	=> 'collection-cat',
+	    'parent' 	=> 0,
+	    'exclude'  	=> 1 // UNCATEGORIZED
+	) ); 
+	foreach ( $parents as $parent ) {
+		// var_dump( $parent );
+		$parentId = $parent->term_id;
+		$parentSlug = $parent->slug;
+		echo "<div class='filter'>";
+			// TITLE – HOW TO TRANSLATE THIS????
+			echo $parent->name. ": ";
+			$types = get_terms( array (
+			    'taxonomy' 	=> 'collection-cat',
+				'child_of' 	=> $parentId,
+			    'exclude'  	=> 1 // UNCATEGORIZED
+			) );
+			echo "<select class='" . $parentSlug . "'><option value='0' selected>" . $trads["trad_all"][1] . "</option>";
+			foreach ( $types as $type ) { ?>
+				<option value="<?php echo $type->slug; ?>"><?php echo $type->name; ?></option>
+			<?php
+			}
+			echo "</select>";
+		echo "</div>";
+	}
+
 }
 
 function pb_coll_list () {
@@ -78,18 +67,14 @@ function pb_coll_list () {
 				$title = str_replace( "-", " ", sanitize_title( get_the_title() ) );
 				$artist = str_replace( "-", " ", sanitize_title( get_field( "coll_artist" ) ) );
 				$terms = get_the_terms( $post->ID, "collection-cat" );
+				$classes = [];
 				foreach ( $terms as $term ) {
-					// TYPE PARENT CATEGORY ID === 22
-					if ( $term->parent === 22 ) {
-						$type = $term->slug;
-					} else if ( $term->parent === 27 ) {
-						$theme = $term->slug;
-					}
+					array_push( $classes, $term->slug );
 				}
 				$year = get_field( "coll_date" );
 				?>
 				<!-- ADD TITLE AND ARTIST IN INFO ATTRIBUTE -->
-				<li class="coll_post image_cell image_cell_toggle" data-row="" data-info="<?php echo $title . " " . $artist; ?>" data-type="<?php echo $type; ?>" data-theme="<?php echo $theme; ?>">
+				<li class="coll_post image_cell image_cell_toggle" data-row="" data-info="<?php echo $title . " " . $artist; ?>" data-class="<?php echo implode(' ', $classes); ?>" >
 					<?php if ( get_field( "coll_image" ) ) { ?>		
 						<div class="coll_image">
 							<?php 

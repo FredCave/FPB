@@ -29,9 +29,7 @@ function pb_get_home ( $trads ) {
 		while ( $about_query->have_posts() ) : $about_query->the_post();
 
 			// IF HAVE VIDEO
-			if ( get_field( "home_video" ) ) { ?>
-				<div id="home_video">
-					<?php 
+			if ( get_field( "home_video" ) ) {
 					// GET IFRAME HTML
 					$iframe = get_field("home_video");
 					// FIND IFRAME SRC + ID
@@ -39,28 +37,41 @@ function pb_get_home ( $trads ) {
 					$src = $matches[1];
 					$video_id = explode("embed/",$src)[1];
 					$_id = explode("?",$video_id)[0];
-					// ADD EXTRA PARAM TO IFRAME SRC
-					$params = array(
-					    'autoplay'    => 1,
-					    'loop'        => 1,
-					    'playlist'	  => $_id
-					);
-					$new_src = add_query_arg($params, $src);
-					$iframe = str_replace($src, $new_src, $iframe);
-					echo $iframe;
+					// // ADD EXTRA PARAM TO IFRAME SRC
+					// $params = array(
+					//     'autoplay'    => 1,
+					//     'loop'        => 1,
+					//     'playlist'	  => $_id
+					// );
+					// $new_src = add_query_arg($params, $src);
+					// $iframe = str_replace($src, $new_src, $iframe);
+					// echo $iframe;
 					?>
+				<div id="player" data-src="<?php echo $src; ?>" data-id="<?php echo $_id; ?>"></div>
+
+				<div id="home_video_button">
+					<div class="play hide"><img src="<?php bloginfo('template_url'); ?>/img/play.svg" /></div>
+					<div class="pause"><img src="<?php bloginfo('template_url'); ?>/img/pause.svg" /></div>
 				</div>
 			<?php
 			// ELSE SINGLE IMAGE
 			} else if ( get_field( "home_images" ) ) {
+				// GET ALL ROWS
 				$rows = get_field( "home_images" );
-				$rand_row = $rows[ array_rand( $rows ) ];
-				$img = $rand_row[ "home_image" ];
+				// SHUFFLE ROWS
+				shuffle($rows);
 				?>
-
-				<div id="home_single_image">	
-					<?php pb_bg_image_object( $img, "blurred" ); ?>
-				</div>
+				<ul id="home_slideshow">
+					<?php 
+					$i = 0;
+					foreach ( $rows as $row ) { ?>
+						<li class="home_single_image <?php if ( $i === 0 ) { echo "visible"; } ?>">
+							<?php pb_bg_image_object( $row["home_image"], "blurred" ); ?>
+						</li>
+					<?php 
+					$i++;
+					} ?>
+				</ul>
 
 				<?php // TEXT BLOCK
 				if ( get_field("home_text") ) { 
@@ -68,14 +79,19 @@ function pb_get_home ( $trads ) {
 					$external = get_field('home_external');
 					?>
 					<li class="home_text" data-link="<?php echo pb_get_link( $internal, $external ); ?>" data-left="" data-top="">
+						<div class="home_close"></div>
 						<span><?php the_field("home_text"); ?></span>
 						<div class="text_link">
-							<a href=""><?php echo $trads["trad_more"][1]; ?></a>
+							<a target="_blank" href="<?php if ( get_field('home_external') ) { the_field('home_external'); } ?>"><?php echo $trads["trad_more"][1]; ?></a>
 						</div>
 					</li>	
 				<?php
 				} 
 				
+
+
+
+
 			} 
 		endwhile;
 		wp_reset_postdata();

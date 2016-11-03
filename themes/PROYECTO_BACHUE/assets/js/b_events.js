@@ -96,15 +96,28 @@ $("section").click(function(e) {
 	});
 
 	$(document).on( "click", ".text_link a", function(e){
-		e.preventDefault();
-		var link = $(this).parents(".home_text").data("link");
-		console.log( 71, link );
-		homeLinkOpen( link );
+		// IF NO EXTERNAL LINK
+		if ( $(this).attr("href") === "" ) {
+			e.preventDefault();
+			var link = $(this).parents(".home_text").data("link");
+			// console.log( 71, link );
+			homeLinkOpen( link );
+		}
 	});	
 
 	$(".home_close").on( "click", function(){
 		homeClose();
 	});	
+
+	// VIDEO CONTROLS
+
+	$("#home_video_button .pause").on("click", function(){
+		pauseVideo();
+	});
+
+	// $("#home_video_button .play").on("click", function(){
+	// 	playVideo();		
+	// });
 
 // 3.3. PUBLICATIONS + EXHIBITIONS
 
@@ -145,14 +158,8 @@ $("section").click(function(e) {
 		// GET VALUE
 		var selec = $(this).val(),
 			menu;
-		if ( $(this).hasClass("type") ) {
-			menu = "type";
-			$(".theme").prop('selectedIndex', 0);
-		} else if ( $(this).hasClass("theme") ) {
-			menu = "theme";
-			$(".type").prop('selectedIndex', 0);
-		}
-		console.log( 66, selec );
+		// RESET SIBLING FILTERS
+		$(this).parents(".filter").siblings().find("select").prop('selectedIndex', 0);
 		// GRID RESET
 		var grid = $(this).parents(".filter_wrapper").next(".image_grid");
 		gridReset( grid );
@@ -179,21 +186,21 @@ $("section").click(function(e) {
 		touchScreenCheck();
 		linkCheck();
 		bottomNavCheck();
-		homeImages();
+		homeTextPos();
+		homeSlideInit();
 		gridManager();
 		imageManager();
 		contentLoader(); 
 		winHFix();
-
-
+		loadVideo();
 	}).on('touchmove', _.throttle(function() {
 		var	wrapperCurrent = $("#wrapper").attr("data-current"); 
-		// if ( wrapperCurrent == 1 ) {
-		// 	$("#console p").append("3");
-		// 	bottomNavCheck();
-		// }
+		if ( wrapperCurrent == 1 ) {
+			// $("#console p").append("3");
+			bottomNavCheck();
+		}
 		//$("#console p").append( wrapperCurrent );
-		bottomNavCheck();
+		// bottomNavCheck();
 
 	}, 10 )).on( "resize", _.throttle(function(){
 		imageManager();

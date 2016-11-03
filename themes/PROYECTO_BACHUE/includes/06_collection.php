@@ -4,7 +4,7 @@
 
 	<!-- PASSWORD FORM -->
 	<div id="coll_password" class="">
-		<?php echo pb_password_form( $trads ); ?>
+		<?php // echo pb_password_form( $trads ); ?>
 	</div>
 
 	<!-- LOAD CONTENT IN AJAX -->
@@ -13,7 +13,7 @@
 	</div> 
 
 	<!-- TMP -->
-	<?php /*
+
 	<div id="coll_content">
 		<div class="ajax_wrapper">
 			<!-- SEARCH FILTER -->
@@ -26,7 +26,7 @@
 			</ul>
 		</div>
 	</div>
-	*/ ?>
+
 	<!-- END OF TMP -->
 
 </div>
