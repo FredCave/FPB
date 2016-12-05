@@ -26,7 +26,8 @@
 		6. ARCHIVE + COLLECTIONS
 			6.1. ARCHIVE FILTER
 			6.2. COLLECTION PASSWORD
-			6.3. COLLECTION FILTER
+			6.3. COLLECTION DROPDOWN FILTER
+			6.4. COLLECTION FILTER BY NAME
 
 
 *****************************************************************************/
@@ -591,6 +592,7 @@ function gridManager () {
 			cols = 2;
 			$(this).attr("data-col", cols);
 		}
+		console.log( 594, "number of cols = ", cols );
 		// RESET – IS THERE A BETTER WAY THAN REMOVING .GRID_LARGE??
 		gridReset( $(this) );
 		// LOOP THROUGH CELLS 
@@ -603,6 +605,11 @@ function gridManager () {
 			$(this).attr( "data-row", row );
 			// IF END OF THE ROW OR IF LAST CELL
 			if ( count % cols === 0 || count === totalCells ) {
+				// REMOVE MARGIN-RIGHT
+				console.log( 609, $(this).find(".coll_title").text() );
+				$(this).css({
+					"margin-right" : "0%"
+				});
 				// ADD CLEAR DIV + IMAGE WRAPPER
 				$(this).after("<div class='clear'></div><div class='grid_large row_" + row + "'><div class='image_wrapper'></div><div class='grid_close'></div></div>");
 				row++;
@@ -1059,4 +1066,46 @@ function collFilter ( menu, value ) {
 			}
 		});
 	}
+}
+
+// 6.4. COLLECTION FILTER BY NAME
+
+function collNameFilter () {
+	console.log("collNameFilter");
+	// CHECK IF LETTERS HAVE ASSOCIATED POSTS
+	// FIND MORE EFFICIENT WAY THAN LOOPING!!!!!!!!!!!!!!!!!!!!!!
+	$("#coll_letters li").each( function(){
+		var ltr = $(this).find("a").text().toLowerCase();
+		// IF CLASS EXISTS
+		if ( $("." + ltr).length ) {
+		// 	console.log(ltr + "exists");
+		} else {
+		// ELSE			
+			$(this).css({
+				"color" : "gray",
+				"pointer" : "text"
+			}).removeClass("active");
+		}
+	});
+}
+
+function collLetterClick( click ) {
+	console.log("collLetterClick");
+	if ( click.parent().hasClass("active") ) {
+		var ltr = click.text().toLowerCase();
+		// HIDE ALL POSTS
+		$(".coll_post").hide().addClass("hidden");
+		// LOOP THROUGH POSTS
+		$(".coll_post").each( function(){
+			// IF DATA-CLASS CONTAINS VALUE
+			if ( $(this).hasClass(ltr) ) {
+				$(this).show().removeClass("hidden");	
+			}
+		});
+	}
+	// HIGHLIGHT CLICKED LETTER
+	$("#coll_letters").find(".clicked").removeClass("clicked");
+	click.parent().addClass("clicked");
+	// REDRAW GRID
+	gridManager();
 }

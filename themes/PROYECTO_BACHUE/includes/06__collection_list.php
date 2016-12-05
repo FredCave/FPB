@@ -6,6 +6,6 @@
 	<?php echo pb_coll_filter( $trads ); ?>
 </div>
 <!-- COLLECTION LIST -->
-<ul id="coll_list" class="image_grid" data-col="3">
+<ul id="coll_list" class="image_grid" data-col="6">
 	<?php pb_coll_list(); ?>
 </ul>

@@ -3,6 +3,68 @@
     "title": "Home",
     "fields": [
         {
+            "key": "field_580f2a23b32ab",
+            "label": "Text",
+            "name": "home_text",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1
+        },
+        {
+            "key": "field_580f2a3cb32ac",
+            "label": "Internal Link",
+            "name": "home_internal",
+            "type": "relationship",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "post_type": [],
+            "taxonomy": [],
+            "filters": [
+                "post_type"
+            ],
+            "elements": "",
+            "min": "",
+            "max": "",
+            "return_format": "object"
+        },
+        {
+            "key": "field_580f2a49b32ad",
+            "label": "External Link",
+            "name": "home_external",
+            "type": "text",
+            "instructions": "Link must begin with http:\/\/ or https:\/\/",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": "",
+            "readonly": 0,
+            "disabled": 0
+        },
+        {
             "key": "field_57f3e92654b08",
             "label": "Video",
             "name": "home_video",
@@ -123,68 +185,6 @@
                     "maxlength": "",
                     "readonly": 0,
                     "disabled": 0
-                },
-                {
-                    "key": "field_57fea40001598",
-                    "label": "Text",
-                    "name": "home_text",
-                    "type": "wysiwyg",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "",
-                        "class": "",
-                        "id": ""
-                    },
-                    "default_value": "",
-                    "tabs": "all",
-                    "toolbar": "full",
-                    "media_upload": 1
-                },
-                {
-                    "key": "field_57f62c9215fce",
-                    "label": "Internal Link",
-                    "name": "home_internal",
-                    "type": "relationship",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "",
-                        "class": "",
-                        "id": ""
-                    },
-                    "post_type": [],
-                    "taxonomy": [],
-                    "filters": [
-                        "post_type"
-                    ],
-                    "elements": "",
-                    "min": "",
-                    "max": "",
-                    "return_format": "object"
-                },
-                {
-                    "key": "field_57f62cd415fcf",
-                    "label": "External Link",
-                    "name": "home_external",
-                    "type": "text",
-                    "instructions": "Link must begin with http:\/\/ or https:\/\/",
-                    "required": "",
-                    "conditional_logic": "",
-                    "wrapper": {
-                        "width": "",
-                        "class": "",
-                        "id": ""
-                    },
-                    "default_value": "",
-                    "placeholder": "",
-                    "prepend": "",
-                    "append": "",
-                    "maxlength": "",
-                    "readonly": 0,
-                    "disabled": 0
                 }
             ]
         }
@@ -222,5 +222,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1476716469
+    "modified": 1477389240
 }

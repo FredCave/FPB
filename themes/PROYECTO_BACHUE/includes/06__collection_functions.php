@@ -24,12 +24,25 @@ function pb_password_form( $trads ) { ?>
 }
 
 function pb_coll_filter ( $trads ) {
+	// SEARCH
 	?>
 	<form id="coll_search" method="post" name="collection-search">
 		<label><?php echo $trads["trad_search"][1]; ?> :</label>
 		<input class="text_input" type="search" name="search" id="search_input"/>
 	</form>
-	<?php 
+	<?php
+	// ALPHABETICAL INDEX
+	echo $trads["trad_filtername"][1];
+	echo "<ul id='coll_letters' class=''>";
+	// CREATE A RANGE OF LETTERS
+	$letters = range('A', 'Z');
+	// LOOP THROUGH LETTERS
+	foreach ( $letters as $letter ) {			
+		// CREATE INDIVIDUAL LIs
+		echo "<li class='coll_letter active'><a href=''>" . $letter . "</a></li>";
+	}
+	echo "</ul>";
+
 	// CREATE DROPDOWN MENU FOR EACH CATEGORY
 	$parents = get_terms( array (
 	    'taxonomy' 	=> 'collection-cat',
@@ -66,6 +79,12 @@ function pb_coll_list () {
 				// SANITIZE ALL INFO LEAVING SPACES
 				$title = str_replace( "-", " ", sanitize_title( get_the_title() ) );
 				$artist = str_replace( "-", " ", sanitize_title( get_field( "coll_artist" ) ) );
+				// GET ARTIST INITIALS 
+				$words = explode(" ", $artist);
+				$inits = "";
+				foreach ($words as $w) {
+					$inits .= $w[0] . " ";
+				}
 				$terms = get_the_terms( $post->ID, "collection-cat" );
 				$classes = [];
 				foreach ( $terms as $term ) {
@@ -74,7 +93,7 @@ function pb_coll_list () {
 				$year = get_field( "coll_date" );
 				?>
 				<!-- ADD TITLE AND ARTIST IN INFO ATTRIBUTE -->
-				<li class="coll_post image_cell image_cell_toggle" data-row="" data-info="<?php echo $title . " " . $artist; ?>" data-class="<?php echo implode(' ', $classes); ?>" >
+				<li class="coll_post image_cell image_cell_toggle <?php echo $inits; ?>" data-row="" data-info="<?php echo $title . " " . $artist; ?>" data-class="<?php echo implode(' ', $classes); ?>" >
 					<?php if ( get_field( "coll_image" ) ) { ?>		
 						<div class="coll_image">
 							<?php 

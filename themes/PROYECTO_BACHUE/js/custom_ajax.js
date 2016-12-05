@@ -22,6 +22,7 @@ function collLoad () {
             coll.html( data );
             // RUN FUNCTIONS ON LOAD
             gridManager();
+            collNameFilter();
             setTimeout( function(){
                 coll.find(".content_wrapper").fadeIn(2000);
             }, 5000 );

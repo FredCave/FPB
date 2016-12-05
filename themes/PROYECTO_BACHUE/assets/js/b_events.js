@@ -167,6 +167,13 @@ $("section").click(function(e) {
 		gridManager();
 	});
 
+	// FILTER BY LETTER
+
+	$("#coll_letters a").on("click", function(e){
+		e.preventDefault();
+		collLetterClick( $(this) );
+	});
+
 
 /****************************************************************************
     
@@ -193,6 +200,11 @@ $("section").click(function(e) {
 		contentLoader(); 
 		winHFix();
 		loadVideo();
+
+		// TMP – REMOVE WHEN COLLECTION IS HIDDEN
+		// collNameFilter();
+	
+
 	}).on('touchmove', _.throttle(function() {
 		var	wrapperCurrent = $("#wrapper").attr("data-current"); 
 		if ( wrapperCurrent == 1 ) {
