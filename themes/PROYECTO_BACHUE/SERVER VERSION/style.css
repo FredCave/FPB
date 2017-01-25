@@ -1,0 +1,11 @@
+/*
+Theme Name:   	PROYECTO BACHUÉ
+Author:       	Fred Cave
+Version:        2016.07.29
+*/
+@import url('https://fonts.googleapis.com/css?family=Share');
+
+
+body {
+	font-family: 'Share', sans-serif !important;
+}

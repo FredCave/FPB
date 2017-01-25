@@ -19,8 +19,8 @@ add_filter('the_generator', 'wpversion_remove_version');
 function enqueue_cpr_scripts() {
   
     wp_deregister_script( 'jquery' );
-//    wp_register_script( 'jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js');
-    wp_register_script( 'jquery', get_template_directory_uri() . '/js/_jquery.js');
+    wp_register_script( 'jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js');
+    // wp_register_script( 'jquery', get_template_directory_uri() . '/js/_jquery.js');
     wp_enqueue_script( 'jquery' );  
     
 //    wp_enqueue_script('jquery', get_template_directory_uri() . '/js/_jquery.js', true);
@@ -201,6 +201,7 @@ function pb_bg_image_object( $image, $added_class ) {
             data-med="<?php echo $medium; ?>" 
             data-lrg="<?php echo $large; ?>" 
             data-ratio="<?php echo $ratio; ?>"  
+            data-src="<?php echo $thumb; ?>" 
             class="<?php echo $class . " bg_image " . $added_class ?>" 
             alt='Fundación Proyecto Bachué' 
             style="background-image:url('<?php echo $thumb; ?>')">

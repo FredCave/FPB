@@ -6,7 +6,7 @@
 	<div id="wrapper" data-current="1">
 
 		<!-- HOME  -->
-		<section id="section_1" data-content="1" class="current loaded">
+		<section id="section_1" data-content="1" class="current">
 			<div class="content_wrapper">
 				<?php include("includes/01_home.php"); ?>
 			</div>

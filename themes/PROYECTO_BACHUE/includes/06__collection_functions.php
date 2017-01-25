@@ -13,13 +13,18 @@ function pb_get_password () {
 
 function pb_password_form( $trads ) { ?>
 	<p><?php echo $trads["trad_enter"][1]; ?></p>
-	<div id="pword_form" data-hash="<?php echo pb_get_password(); ?>" onKeyPress="submitCheck(event)">
+	<div id="pword_form" data-hash="<?php echo pb_get_password(); ?>">
 		<label><?php echo $trads["trad_pass"][1]; ?> :</label>
 		<input class="text_input" id="pword_input"/>
-		<input type="button" value="<?php echo $trads["trad_login"][1]; ?>" id="pword_submit" onclick="passCheck()"/>
+		<input type="button" value="<?php echo $trads["trad_login"][1]; ?>" id="pword_submit" onclick="controllerCollection.passwordCheck()"/>
 	</div>
 	<!-- ERROR MESSAGE -->
-	<div id="error_message"></div>
+	<div id="error_message"
+		data-trad-incorrect-en="<?php echo $trads["trad_incorrect"][0]; ?>" 
+		data-trad-incorrect-es="<?php echo $trads["trad_incorrect"][1]; ?>" 
+		data-trad-too-many-en="<?php echo $trads["trad_toomany"][0]; ?>" 
+		data-trad-too-many-es="<?php echo $trads["trad_toomany"][1]; ?>" >
+	</div>
 	<?php
 }
 
@@ -39,7 +44,7 @@ function pb_coll_filter ( $trads ) {
 	// LOOP THROUGH LETTERS
 	foreach ( $letters as $letter ) {			
 		// CREATE INDIVIDUAL LIs
-		echo "<li class='coll_letter active'><a href=''>" . $letter . "</a></li>";
+		echo "<li class='coll_letter'><a href=''>" . $letter . "</a></li>";
 	}
 	echo "</ul>";
 
@@ -75,6 +80,8 @@ function pb_coll_filter ( $trads ) {
 function pb_coll_list () {
 	$coll_query = new WP_Query( "post_type=collection" );
 		if ( $coll_query->have_posts() ) :
+			// RECORD ALL INITIALS IN AN ARRAY
+			$all_inits = [];
 			while ( $coll_query->have_posts() ) : $coll_query->the_post(); 
 				// SANITIZE ALL INFO LEAVING SPACES
 				$title = str_replace( "-", " ", sanitize_title( get_the_title() ) );
@@ -84,6 +91,10 @@ function pb_coll_list () {
 				$inits = "";
 				foreach ($words as $w) {
 					$inits .= $w[0] . " ";
+					// CHECK IF NOT ALREADY IN $ALL_INITS
+					if ( !in_array( $w[0], $all_inits ) ) {
+					    array_push( $all_inits, $w[0] );
+					}
 				}
 				$terms = get_the_terms( $post->ID, "collection-cat" );
 				$classes = [];
@@ -92,7 +103,7 @@ function pb_coll_list () {
 				}
 				$year = get_field( "coll_date" );
 				?>
-				<!-- ADD TITLE AND ARTIST IN INFO ATTRIBUTE -->
+				
 				<li class="coll_post image_cell image_cell_toggle <?php echo $inits; ?>" data-row="" data-info="<?php echo $title . " " . $artist; ?>" data-class="<?php echo implode(' ', $classes); ?>" >
 					<?php if ( get_field( "coll_image" ) ) { ?>		
 						<div class="coll_image">
@@ -159,6 +170,14 @@ function pb_coll_list () {
 				</li>
 			<?php
 		endwhile;
+		// SORT ALL INITIALS
+		sort($all_inits);
+		echo "<div id='initials' class='hide'>"; 
+		foreach ($all_inits as $all_init) {
+			echo $all_init;
+		}
+		echo "</div>";
+
 		wp_reset_postdata();
 	endif;
 }

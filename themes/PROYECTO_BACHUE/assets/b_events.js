@@ -88,7 +88,7 @@ $("section").click(function(e) {
 // 3.2. HOME
 	
 	$(document).on( "mouseover", "#home_multiple_images li", function(){
-		homeHover( $(this) );
+		// homeHover( $(this) );
 	});
 
 	$(document).on( "click", ".home_multiple_image", function(){

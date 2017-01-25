@@ -8,9 +8,11 @@
 	</div>
 
 	<!-- LOAD CONTENT IN AJAX -->
+
 	<div id="coll_content">
 		<div class="content_wrapper"><!-- AJAX APPENDED HERE --></div>
 	</div> 
+
 
 	<!-- TMP -->
 	<?php /*
@@ -27,6 +29,7 @@
 		</div>
 	</div>
 	*/ ?>
+
 	<!-- END OF TMP -->
 
 </div>
