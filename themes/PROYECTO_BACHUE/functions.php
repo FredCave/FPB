@@ -210,6 +210,24 @@ function pb_bg_image_object( $image, $added_class ) {
     endif;
 }
 
+// ADD CUSTOM QUERY
+
+function add_custom_query_var( $vars ){
+    $vars[] = "lang";
+    return $vars;
+}
+add_filter( 'query_vars', 'add_custom_query_var' );
+
+// GET LANGUAGE FROM QUERY
+
+function get_lang() {   
+    if ( $_GET['lang'] === "en" ) {
+        return "en";       
+    } else {
+        return "es";
+    }  
+}
+
 // TRANSLATIONS
 
 global $trads;
@@ -231,5 +249,35 @@ if ( $strings_query->have_posts() ) :
     return $trads;
     wp_reset_postdata();
 endif; 
+
+function the_trad ( $trad_type, $trads ) {
+    if ( get_lang() === "en" ) { 
+        $trad_id = 0;
+    } else {
+        $trad_id = 1;   
+    }
+    echo $trads[$trad_type][$trad_id];
+}
+
+// TEXT IN CORRECT LANGUAGE
+
+function the_trad_field ( $field ) {
+    // IF CURRENT LANG === "EN"
+    if ( get_lang() === "en" ) {
+        if ( get_field( $field . "_en" ) ) {
+            echo preg_replace('~\s?<p>(\s|&nbsp;)+</p>\s?~', '', get_field( $field . "_en" ));          
+        } else {
+            // IF NO TRANSLATION AVAILABLE: ECHO 'NO TRANSLATION AVAILABLE' + OPTION TO SEE DEFAULT SPANISH TEXT
+            ?>
+            <p>No translation available.</p>
+            <a href="" class="trad_default_reveal">Click here to see Spanish text.</a>
+            <span class="trad_default_hidden"><?php echo preg_replace('~\s?<p>(\s|&nbsp;)+</p>\s?~', '', get_field( $field )); ?></span>
+            <?php
+        }        
+    } else {
+        echo preg_replace('~\s?<p>(\s|&nbsp;)+</p>\s?~', '', get_field( $field ));
+    } 
+}
+
 
 ?>

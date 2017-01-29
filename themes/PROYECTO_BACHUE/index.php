@@ -18,12 +18,19 @@
 						<a href="" data-id="1"><img src="<?php bloginfo( 'template_url' ); ?>/img/logo.svg" /></a>
 					</span>
 					<ul>
+
+						<?php if ( get_lang() === "en" ) {
+							$trad_id = 0;
+						} else {
+							$trad_id = 1;
+						} ?>
+
 						<!-- MENU -->
-						<li><a data-id="2" href="#sobre-nosotros"><?php echo $trads["trad_about"][1]; ?></a></li>
-						<li><a data-id="3" href="#publicaciones"><?php echo $trads["trad_pub"][1]; ?></a></li>
-						<li><a data-id="4" href="#exposiciones"><?php echo $trads["trad_exh"][1]; ?></a></li>
-						<li><a data-id="5" href="#noticias"><?php echo $trads["trad_news"][1]; ?></a></li>
-						<li><a data-id="6" href="#la-coleccion"><?php echo $trads["trad_coll"][1]; ?></a></li>		
+						<li><a data-id="2" href="#sobre-nosotros"><?php echo $trads["trad_about"][$trad_id]; ?></a></li>
+						<li><a data-id="3" href="#publicaciones"><?php echo $trads["trad_pub"][$trad_id]; ?></a></li>
+						<li><a data-id="4" href="#exposiciones"><?php echo $trads["trad_exh"][$trad_id]; ?></a></li>
+						<li><a data-id="5" href="#noticias"><?php echo $trads["trad_news"][$trad_id]; ?></a></li>
+						<li><a data-id="6" href="#la-coleccion"><?php echo $trads["trad_coll"][$trad_id]; ?></a></li>		
 					</ul>
 				</div>
 			</div>

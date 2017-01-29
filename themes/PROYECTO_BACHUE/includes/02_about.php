@@ -4,7 +4,7 @@
 
 	<div class="col_1 col">
 		<!-- ABOUT -->
-		<?php echo pb_get_about(); ?>
+		<?php echo pb_get_about( $trads ); ?>
 
 		<!-- COLLECTION TEXT -->
 		<?php echo pb_get_collection(); ?>

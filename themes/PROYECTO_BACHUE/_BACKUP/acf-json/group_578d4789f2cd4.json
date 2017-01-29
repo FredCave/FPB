@@ -1,11 +1,11 @@
 {
-    "key": "group_580dd0845bfd2",
-    "title": "Translations",
+    "key": "group_578d4789f2cd4",
+    "title": "Links",
     "fields": [
         {
-            "key": "field_580dd089b94ec",
-            "label": "Translations",
-            "name": "translations",
+            "key": "field_578d478da7e5d",
+            "label": "Aliados",
+            "name": "links",
             "type": "repeater",
             "instructions": "",
             "required": 0,
@@ -19,33 +19,12 @@
             "min": "",
             "max": "",
             "layout": "table",
-            "button_label": "Add Translation",
+            "button_label": "Add Link",
             "sub_fields": [
                 {
-                    "key": "field_580ddf1cfe297",
-                    "label": "Code",
-                    "name": "translation_code",
-                    "type": "text",
-                    "instructions": "Code used for programming purposes. Do not modify.",
-                    "required": "",
-                    "conditional_logic": "",
-                    "wrapper": {
-                        "width": "",
-                        "class": "",
-                        "id": ""
-                    },
-                    "default_value": "",
-                    "placeholder": "",
-                    "prepend": "",
-                    "append": "",
-                    "maxlength": "",
-                    "readonly": 0,
-                    "disabled": 0
-                },
-                {
-                    "key": "field_580dd0aeb94ed",
-                    "label": "English",
-                    "name": "translation_en",
+                    "key": "field_578d47a3a7e5e",
+                    "label": "Link Name",
+                    "name": "link_name",
                     "type": "text",
                     "instructions": "",
                     "required": 0,
@@ -64,11 +43,11 @@
                     "disabled": 0
                 },
                 {
-                    "key": "field_580dd0c7b94ee",
-                    "label": "Spanish",
-                    "name": "translation_es",
+                    "key": "field_578d47b6a7e5f",
+                    "label": "Link URL",
+                    "name": "link_url",
                     "type": "text",
-                    "instructions": "",
+                    "instructions": "Link must begin with http:\/\/ or https:\/\/",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -92,7 +71,7 @@
             {
                 "param": "post",
                 "operator": "==",
-                "value": "273"
+                "value": "23"
             }
         ]
     ],
@@ -120,5 +99,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1485467893
+    "modified": 1468876763
 }

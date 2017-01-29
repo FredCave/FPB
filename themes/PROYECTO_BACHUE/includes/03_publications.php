@@ -4,7 +4,7 @@
 
 	<!-- INTRO TEXT -->
 	<div class="col_1 col">
-		<?php pb_get_pub_intro(); ?>
+		<?php pb_get_pub_intro( $trads ); ?>
 	</div><!-- END OF .COL_1 -->
 
 	<!-- PREVIEW BANNER -->
@@ -17,7 +17,7 @@
 	<!-- LIST -->
 	<div id="publications_list" class="list">
 		<ul>
-			<?php pb_get_pub_list(); ?>
+			<?php pb_get_pub_list( $trads ); ?>
 		</ul>
 	</div>
 

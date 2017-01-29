@@ -1,12 +1,12 @@
 {
-    "key": "group_578d0e3a47b8d",
-    "title": "Home",
+    "key": "group_578ddd01dfbd0",
+    "title": "Publications",
     "fields": [
         {
-            "key": "field_580f2a23b32ab",
-            "label": "Text",
-            "name": "home_text",
-            "type": "wysiwyg",
+            "key": "field_578ddd2caf572",
+            "label": "Main Image",
+            "name": "publication_image",
+            "type": "image",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -15,58 +15,23 @@
                 "class": "",
                 "id": ""
             },
-            "default_value": "",
-            "tabs": "all",
-            "toolbar": "full",
-            "media_upload": 1
+            "return_format": "array",
+            "preview_size": "thumbnail",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": ""
         },
         {
-            "key": "field_588ae849e1bcf",
-            "label": "Text English",
-            "name": "home_text_en",
-            "type": "wysiwyg",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
-            "tabs": "all",
-            "toolbar": "full",
-            "media_upload": 1
-        },
-        {
-            "key": "field_580f2a3cb32ac",
-            "label": "Internal Link",
-            "name": "home_internal",
-            "type": "relationship",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "post_type": [],
-            "taxonomy": [],
-            "filters": [
-                "post_type"
-            ],
-            "elements": "",
-            "min": "",
-            "max": "",
-            "return_format": "object"
-        },
-        {
-            "key": "field_580f2a49b32ad",
-            "label": "External Link",
-            "name": "home_external",
+            "key": "field_578ddf60ee799",
+            "label": "Author",
+            "name": "publication_author",
             "type": "text",
-            "instructions": "Link must begin with http:\/\/ or https:\/\/",
+            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -83,11 +48,50 @@
             "disabled": 0
         },
         {
-            "key": "field_57f3e92654b08",
-            "label": "Video",
-            "name": "home_video",
+            "key": "field_578ddf9cee79a",
+            "label": "Price",
+            "name": "publication_price",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "pesos COP",
+            "maxlength": "",
+            "readonly": 0,
+            "disabled": 0
+        },
+        {
+            "key": "field_578ddd59af573",
+            "label": "Text",
+            "name": "publication_text",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1
+        },
+        {
+            "key": "field_5808c7fef0ad7",
+            "label": "Embedded Video",
+            "name": "publication_video",
             "type": "oembed",
-            "instructions": "Paste URL of video here.",
+            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -99,11 +103,30 @@
             "height": ""
         },
         {
-            "key": "field_57f3eb2154b09",
-            "label": "Images",
-            "name": "home_images",
+            "key": "field_578ddd73af574",
+            "label": "PDF",
+            "name": "publication_pdf",
+            "type": "file",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array",
+            "library": "all",
+            "min_size": "",
+            "max_size": "",
+            "mime_types": ""
+        },
+        {
+            "key": "field_578ddd8baf575",
+            "label": "Spreads",
+            "name": "publication_spreads",
             "type": "repeater",
-            "instructions": "Images are only visible if there is no video.",
+            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -114,13 +137,13 @@
             "collapsed": "",
             "min": "",
             "max": "",
-            "layout": "block",
-            "button_label": "Add Image",
+            "layout": "table",
+            "button_label": "Add Images",
             "sub_fields": [
                 {
-                    "key": "field_57f3ed7d54b0a",
+                    "key": "field_578dde8caf576",
                     "label": "Image",
-                    "name": "home_image",
+                    "name": "publication_spread",
                     "type": "image",
                     "instructions": "",
                     "required": 0,
@@ -147,14 +170,14 @@
     "location": [
         [
             {
-                "param": "post",
+                "param": "post_type",
                 "operator": "==",
-                "value": "168"
+                "value": "publications"
             }
         ]
     ],
     "menu_order": 0,
-    "position": "acf_after_title",
+    "position": "normal",
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
@@ -177,5 +200,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1485498453
+    "modified": 1476970516
 }

@@ -12,18 +12,16 @@ function pb_get_password () {
 }
 
 function pb_password_form( $trads ) { ?>
-	<p><?php echo $trads["trad_enter"][1]; ?></p>
+	<p><?php the_trad("trad_enter",$trads); ?></p>
 	<div id="pword_form" data-hash="<?php echo pb_get_password(); ?>">
-		<label><?php echo $trads["trad_pass"][1]; ?> :</label>
+		<label><?php the_trad("trad_pass",$trads); ?> :</label>
 		<input class="text_input" id="pword_input"/>
-		<input type="button" value="<?php echo $trads["trad_login"][1]; ?>" id="pword_submit" onclick="controllerCollection.passwordCheck()"/>
+		<input type="button" value="<?php the_trad("trad_login",$trads); ?>" id="pword_submit" onclick="controllerCollection.passwordCheck()"/>
 	</div>
 	<!-- ERROR MESSAGE -->
 	<div id="error_message"
-		data-trad-incorrect-en="<?php echo $trads["trad_incorrect"][0]; ?>" 
-		data-trad-incorrect-es="<?php echo $trads["trad_incorrect"][1]; ?>" 
-		data-trad-too-many-en="<?php echo $trads["trad_toomany"][0]; ?>" 
-		data-trad-too-many-es="<?php echo $trads["trad_toomany"][1]; ?>" >
+		data-trad-incorrect="<?php the_trad("trad_incorrect",$trads); ?>" 
+		data-trad-too-many="<?php the_trad("trad_toomany",$trads); ?>" >
 	</div>
 	<?php
 }
@@ -32,7 +30,7 @@ function pb_coll_filter ( $trads ) {
 	// SEARCH
 	?>
 	<form id="coll_search" method="post" name="collection-search">
-		<label><?php echo $trads["trad_search"][1]; ?> :</label>
+		<label><?php the_trad("trad_search",$trads); ?> :</label>
 		<input class="text_input" type="search" name="search" id="search_input"/>
 	</form>
 	<?php
@@ -66,7 +64,9 @@ function pb_coll_filter ( $trads ) {
 				'child_of' 	=> $parentId,
 			    'exclude'  	=> 1 // UNCATEGORIZED
 			) );
-			echo "<select class='" . $parentSlug . "'><option value='0' selected>" . $trads["trad_all"][1] . "</option>";
+			echo "<select class='" . $parentSlug . "'><option value='0' selected>";
+			the_trad("trad_all",$trads);
+			echo "</option>";
 			foreach ( $types as $type ) { ?>
 				<option value="<?php echo $type->slug; ?>"><?php echo $type->name; ?></option>
 			<?php
@@ -77,11 +77,58 @@ function pb_coll_filter ( $trads ) {
 
 }
 
+function pb_coll_html_image () {
+	if ( get_field( "coll_image" ) ) { ?>		
+		<div class="coll_image">
+			<?php $image = get_field( "coll_image" );
+			pb_image_object( $image ); ?>
+		</div>
+	<?php }
+}
+
+function pb_coll_html_title () { ?>
+	<div class="coll_title">
+		<h1><?php the_title(); ?></h1>
+		<h1><?php the_field( "coll_artist" ); ?>, <?php the_field( "coll_date" ); ?></h1>
+	</div>
+<?php }
+
+function pb_coll_html_info() { ?>
+	<div class="hidden_content hide">
+		<div class="col col_1">
+			<?php pb_coll_html_title () ?>
+			<div>
+				<?php // DATE
+				if ( get_field( "coll_date" ) ) {
+					echo "Fecha de creación : " . get_field( "coll_date" ) . "<br>";
+				} // DIMENSIONS
+				if ( get_field( "coll_dimensions" ) ) {
+					echo "Dimensiones : " . get_field( "coll_dimensions" ) . "<br>";
+				} // TECHNIQUE
+				if ( get_field( "coll_technique" ) ) {
+					echo "Técnica : " . get_field( "coll_technique" ) . "<br>";
+				} // EXHIBITIONS
+				if ( get_field( "coll_exhibitions" ) ) { ?>
+					<p>Curadurías :</p>
+					<div>
+						<?php the_field( "coll_exhibitions" ); ?>
+					</div>
+				<?php } ?>
+			</div>
+			<div>
+				<?php // TEXT
+				the_trad_field( "coll_text" ); ?>
+			</div>
+		</div>
+		<div class="col col_2">
+			<?php pb_coll_html_image(); ?>
+		</div>
+	</div>
+<?php }
+
 function pb_coll_list () {
 	$coll_query = new WP_Query( "post_type=collection" );
 		if ( $coll_query->have_posts() ) :
-			// RECORD ALL INITIALS IN AN ARRAY
-			$all_inits = [];
 			while ( $coll_query->have_posts() ) : $coll_query->the_post(); 
 				// SANITIZE ALL INFO LEAVING SPACES
 				$title = str_replace( "-", " ", sanitize_title( get_the_title() ) );
@@ -91,93 +138,34 @@ function pb_coll_list () {
 				$inits = "";
 				foreach ($words as $w) {
 					$inits .= $w[0] . " ";
-					// CHECK IF NOT ALREADY IN $ALL_INITS
-					if ( !in_array( $w[0], $all_inits ) ) {
-					    array_push( $all_inits, $w[0] );
-					}
 				}
 				$terms = get_the_terms( $post->ID, "collection-cat" );
 				$classes = [];
 				foreach ( $terms as $term ) {
 					array_push( $classes, $term->slug );
 				}
-				$year = get_field( "coll_date" );
-				?>
+				$year = get_field( "coll_date" ); ?>
 				
-				<li class="coll_post image_cell image_cell_toggle <?php echo $inits; ?>" data-row="" data-info="<?php echo $title . " " . $artist; ?>" data-class="<?php echo implode(' ', $classes); ?>" >
-					<?php if ( get_field( "coll_image" ) ) { ?>		
-						<div class="coll_image">
-							<?php 
-							$image = get_field( "coll_image" );
-							pb_image_object( $image );
-							?>
-						</div>
-					<?php } ?>
-					<div class="coll_title">
-						<h1><?php the_title(); ?></h1>
-						<h1><?php the_field( "coll_artist" ); ?>, <?php the_field( "coll_date" ); ?></h1>
-					</div>
+				<li class="coll_post image_cell <?php echo $inits; ?>" 
+					data-row="" 
+					data-info="<?php echo $title . ' ' . $artist; ?>"
+					data-class="<?php echo implode(' ', $classes); ?>" >
+					<div class="image_cell_toggle">
+					
+					<?php
+					// ECHO IMAGE HTML
+					pb_coll_html_image();
 
-					<!-- CONTENT TO BE LOADED IN GRID_LARGE -->
-					<div class="hidden_content hide">
-						<div class="col col_1">
-							<div>
-								<h1><?php the_title(); ?></h1>
-								<h1><?php the_field( "coll_artist" ); ?></h1>
-							</div>
-							<div>
-								<?php
-								// DATE
-								if ( get_field( "coll_date" ) ) {
-									echo "Fecha de creación : " . get_field( "coll_date" ) . "<br>";
-								}
-								// DIMENSIONS
-								if ( get_field( "coll_dimensions" ) ) {
-									echo "Dimensiones : " . get_field( "coll_dimensions" ) . "<br>";
-								}
-								// TECHNIQUE
-								if ( get_field( "coll_technique" ) ) {
-									echo "Técnica : " . get_field( "coll_technique" ) . "<br>";
-								}
-								// EXHIBITIONS
-								if ( get_field( "coll_exhibitions" ) ) { ?>
-									<p>Curadurías :</p>
-									<div>
-										<?php the_field( "coll_exhibitions" ); ?>
-									</div>
-								<?php
-								}
-								?>
-							</div>
-							<div>
-								<?php
-								// TEXT
-								if ( get_field( "coll_text" ) ) {
-									the_field( "coll_text" );
-								}
-								?>
-							</div>
-						</div>
-						<div class="col col_2">
-							<div class="coll_image">
-								<?php 
-								$image = get_field( "coll_image" );
-								pb_image_object( $image );
-								?>
-							</div>
-						</div>
-					</div>
-				</li>
-			<?php
+					// ECHO TITLE / ARTIST
+					pb_coll_html_title();
+
+					// ECHO INFO HTML
+					pb_coll_html_info();
+
+				echo "</div></li>";
+
 		endwhile;
-		// SORT ALL INITIALS
-		sort($all_inits);
-		echo "<div id='initials' class='hide'>"; 
-		foreach ($all_inits as $all_init) {
-			echo $all_init;
-		}
-		echo "</div>";
-
+		
 		wp_reset_postdata();
 	endif;
 }

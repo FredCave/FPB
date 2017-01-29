@@ -1,11 +1,11 @@
 <?php
 
-function pb_get_about () {
+function pb_get_about ( $trads ) {
 	$about_query = new WP_Query( "name=sobre-proyecto-bachue" );
 	if ( $about_query->have_posts() ) :
 		while ( $about_query->have_posts() ) : $about_query->the_post(); ?>	
-			<h2><?php the_title(); ?></h2>
-			<div><?php echo preg_replace('~\s?<p>(\s|&nbsp;)+</p>\s?~', '', get_field("about_text")); ?></div>
+			<h2><?php the_trad("trad_about",$trads); ?></h2>
+			<div><?php the_trad_field("about_text"); ?></div>
 		<?php
 		endwhile;
 		wp_reset_postdata();
@@ -36,29 +36,29 @@ function pb_get_collection () {
 	endif;	
 }
 
+function pb_about_html_link () { ?>
+	<div id="links">
+		<ul>
+			<h2><?php the_title(); ?></h2>
+			<?php while ( have_rows("links") ) : the_row("link"); ?>
+				<li>
+					<a href="<?php the_sub_field('link_url'); ?>" target="_blank">
+						<?php the_sub_field('link_name'); ?>
+					</a>
+				</li>
+			<?php endwhile; ?>
+		</ul>
+	</div>
+<?php }
+
 function pb_get_links () {
 	$link_query = new WP_Query( "name=aliados" );
 	if ( $link_query->have_posts() ) :
 		while ( $link_query->have_posts() ) : $link_query->the_post(); 
 			// CHECK IF ANY LINKS
-			if ( have_rows("links") ) : ?>
-				<div id="links">
-					<ul>
-						<h2><?php the_title(); ?></h2>
-						<?php 
-						// LOOP
-						while ( have_rows("links") ) : the_row("link"); ?>
-							<li>
-								<a href="<?php the_sub_field('link_url'); ?>" target="_blank">
-									<?php the_sub_field('link_name'); ?>
-								</a>
-							</li>
-						<?php
-						endwhile;
-						?>
-					</ul>
-				</div><!-- END OF #LINKS -->
-			<?php
+			if ( have_rows("links") ) :
+				// ECHO HTML
+				pb_about_html_link();
 			endif; // END OF LINK CHECK
 		endwhile;
 		wp_reset_postdata();

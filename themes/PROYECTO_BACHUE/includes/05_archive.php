@@ -2,13 +2,8 @@
 
 <div id="noticias" class="wrapper">
 	
-	<!-- 
-		PAGINATION?????
-	-->
-
 	<div id="archive_filter" class="filter_wrapper">
-		<?php 
-		echo $trads["trad_filter"][1];
+		<?php the_trad("trad_filter", $trads);
 		pb_archive_filter( $trads ); ?>
 	</div>
 

@@ -3,16 +3,6 @@
 var winH = $(window).height(),
 	winW = $(window).width();
 
-// 1.6. SECTION CHECK
-
-function sectionCheck( click ) {
-	console.log("sectionCheck"); 
-	// IF CLICKED SECTION DOES NOT EQUAL CURRENT
-	if ( click != $("#wrapper").attr("data-current") ) {
-		navToSection( click );
-	}
-}
-
 // 1.9. SECTIONS RESIZE
 
 function winHFix () {

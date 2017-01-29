@@ -4,7 +4,7 @@
 
 	<!-- INTRO TEXT -->
 	<div class="col_1 col">
-		<?php pb_get_exhib_intro(); ?>
+		<?php pb_get_exhib_intro( $trads ); ?>
 	</div><!-- END OF .COL_1 -->
 
 	<!-- PREVIEW BANNER -->

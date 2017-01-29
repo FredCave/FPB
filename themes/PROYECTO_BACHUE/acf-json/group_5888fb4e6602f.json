@@ -1,11 +1,11 @@
 {
-    "key": "group_578d462bf0c0c",
-    "title": "About",
+    "key": "group_5888fb4e6602f",
+    "title": "Publications Intro",
     "fields": [
         {
-            "key": "field_5888fa4eb9dde",
+            "key": "field_5888fba2ba842",
             "label": "Main Text",
-            "name": "about_text",
+            "name": "publications_text",
             "type": "wysiwyg",
             "instructions": "",
             "required": 0,
@@ -21,9 +21,9 @@
             "media_upload": 1
         },
         {
-            "key": "field_5888fa32b9ddd",
+            "key": "field_5888fbbaba843",
             "label": "Main Text English",
-            "name": "about_text_en",
+            "name": "publications_text_en",
             "type": "wysiwyg",
             "instructions": "",
             "required": 0,
@@ -37,30 +37,6 @@
             "tabs": "all",
             "toolbar": "full",
             "media_upload": 1
-        },
-        {
-            "key": "field_578d463263260",
-            "label": "Main Image",
-            "name": "about_image",
-            "type": "image",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "return_format": "array",
-            "preview_size": "thumbnail",
-            "library": "all",
-            "min_width": "",
-            "min_height": "",
-            "min_size": "",
-            "max_width": "",
-            "max_height": "",
-            "max_size": "",
-            "mime_types": ""
         }
     ],
     "location": [
@@ -68,7 +44,7 @@
             {
                 "param": "post",
                 "operator": "==",
-                "value": "16"
+                "value": "104"
             }
         ]
     ],
@@ -96,5 +72,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1485430861
+    "modified": 1485372336
 }

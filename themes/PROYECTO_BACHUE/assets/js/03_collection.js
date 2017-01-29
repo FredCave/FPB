@@ -1,3 +1,10 @@
+/************************************************
+
+	CONTROLLER
+
+************************************************/
+
+
 var controllerCollection = {
 
 	// CALL IN HTML
@@ -11,13 +18,13 @@ var controllerCollection = {
 
 	getPassAttempts: function () {
 
-		return model.passAttempts;
+		return controllerPage.passAttempts;
 
 	},
 
 	updatePassAttempts: function () {
 
-		model.passAttempts++;
+		controllerPage.passAttempts++;
 
 	},
 
@@ -57,7 +64,7 @@ var controllerCollection = {
 		console.log("controllerCollection.textSearch", input);
 
 		// RESET GRID
-		controllerPage.gridReset( $("#coll_list") );
+		controllerSections.gridReset( $("#coll_list") );
 
 		// RESET DROPDOWN FILTERS
 		$(".theme").prop('selectedIndex', 0);	
@@ -76,7 +83,7 @@ var controllerCollection = {
 		});
 
 		// REDRAW GRID
-		controllerPage.gridInit();
+		controllerSections.gridInit();
 
 	},
 
@@ -115,7 +122,7 @@ var controllerCollection = {
 		click.parent().addClass("clicked");
 		
 		// REDRAW GRID
-		controllerPage.gridInit();
+		controllerSections.gridInit();
 	},
 
 	dropDown: function ( select ) {
@@ -125,7 +132,7 @@ var controllerCollection = {
 		// RESET SIBLING FILTERS
 		select.parents(".filter").siblings().find("select").prop('selectedIndex', 0);
 		// GRID RESET
-		controllerPage.gridReset( $("#coll_list") );
+		controllerSections.gridReset( $("#coll_list") );
 
 		if ( value === "0" ) {
 			console.log("Show all posts.");
@@ -146,7 +153,7 @@ var controllerCollection = {
 		}
 
 		// REDRAW GRID
-		controllerPage.gridInit();
+		controllerSections.gridInit();
 	},
 
 	ajaxSuccess: function ( data ) {
@@ -156,11 +163,74 @@ var controllerCollection = {
 	    // ADD DATA + FADE IN
         $("#coll_content").html( data );
  
-		controllerPage.gridInit();
+		controllerSections.gridInit();
         
 		viewCollection.onAjaxSuccess();
 
 	}
 
 }
+
+/************************************************
+
+	VIEW
+
+************************************************/
+
+var viewCollection = {
+	
+	passwordInit: function () {
+
+		$("#pword_form .text_input").on("keypress", function( event ) {
+
+			if ( event && event.keyCode == 13 ) {
+				controllerCollection.passwordCheck( event );
+			}
+
+		});
+
+	},
+
+	onAjaxSuccess: function () {
+
+		console.log("viewCollection.onAjaxSuccess");
+
+		var coll = $("#coll_content"),
+			collTop = $("#coll_list").offset().top;
+
+		controllerCollection.lettersInit();
+
+		coll.on( "click", "#coll_letters a", function(e){
+			e.preventDefault();
+			controllerCollection.letterClick( $(this) );
+		}).on( "keyup", "#search_input", function () {
+			controllerCollection.textSearch( $("#search_input").val() );
+		}).on( "change", "#coll_filter select", function(e) {
+			e.preventDefault();
+			controllerCollection.dropDown( $(this) );
+		});
+
+		setTimeout( function(){
+        	coll.find(".content_wrapper").fadeIn(2000);
+        }, 5000 );
+        
+        // IF MOBILE SCROLL TO TOP OF COLLECTION
+        if ( $("#wrapper").hasClass("mobile") ) {
+            $("html,body").animate({
+                scrollTop : collTop
+            }, 500 );
+        }
+
+		coll.on("click", ".image_cell_toggle", function(){
+			controllerSections.gridOpen( $(this) );
+		});
+
+		coll.on( "click", ".grid_close", function(){
+			controllerSections.gridClose( $(this) );
+		});
+
+	}
+
+}
+
 

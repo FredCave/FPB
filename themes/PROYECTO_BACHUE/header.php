@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html <?php language_attributes(); ?> style="margin-top: 0px !important" data-scroll="0">
+<html lang="<?php echo get_lang(); ?>" style="margin-top: 0px !important" data-scroll="0">
 
 <head>
 	<title>Fundación Proyecto Bachué</title>
@@ -49,6 +49,7 @@
 
 <body class="body-class">
 	<script>
+
 		// ANALYTICS
 		
 		// FACEBOOK
