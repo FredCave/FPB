@@ -16,6 +16,8 @@ var controllerPage = {
 
 	passAttempts: 0,
 
+	clickBlock: false,
+
 	pageInit: function () {
 
 		console.log("controllerPage.pageInit");
@@ -27,9 +29,9 @@ var controllerPage = {
 		// SECTIONS INIT
 		controllerHome.init();
 		controllerSections.sectionsInit();
-		this.sectionCheck();
-		// TOUCH SCREEN CHECK
-		controllerMobile.touchScreenCheck();
+		this.sectionCheckBind();
+		// TOUCH SCREEN CHECK IN VIEW PAGE
+		
 
 	},
 
@@ -106,7 +108,7 @@ var controllerPage = {
 
 	scrollManager: function ( delta ) {
 
-		console.log( "controllerPage.scrollManager", $(".current"), this.getCurrent(), delta );
+		console.log( "controllerPage.scrollManager" );
 
 		var current = $(".current"),
 			currentNumber = this.getCurrent();
@@ -247,10 +249,10 @@ var controllerPage = {
 
 	imageManager: function ( section ) {
 
-		console.log("controllerPage.imageManager");
+		console.log("controllerPage.imageManager", section );
 
 		// LOOP THROUGH IMAGES
-		section.find("img").each( function(i){
+		section.find("img").not(".main_logo, .arrow_img").each( function(i){
 			controllerPage.imageCalc( $(this) );
 		});
 
@@ -258,10 +260,10 @@ var controllerPage = {
 
 	imageCalc: function ( image ) {
 	
-		console.log("controllerPage.imageCalc");
+		// console.log("controllerPage.imageCalc");
 
 		var img = image,
-			currSrc,
+			currSrc = img.attr("src"),
 			newSrc,
 			imgW;
 
@@ -279,9 +281,11 @@ var controllerPage = {
 		}
 		// CALCULATE SIZE
 		if ( img.hasClass("bg_image") ) {
-			// IF WIN IS VERTICAL
-			if ( $(window).width() < $(window).height() ) {
+			// IF WINDOW RATIO LESS THAN IMAGE RATIO: IMAGE HEIGHT = WINDOW HEIGHT
+			if ( $(window).width() / $(window).height() < parseInt( img.attr("data-ratio") ) ) {
 				imgW = $(window).height() * img.attr("data-ratio");
+			} else {
+				imgW = img.width();
 			}
 		} else {
 			imgW = img.width();
@@ -291,30 +295,46 @@ var controllerPage = {
 			newSrc = img.attr("data-thm");
 		} else if ( imgW > 300 && imgW <= 600 ) {
 			newSrc = img.attr("data-med");
-		} else {
+		} else if ( imgW > 600 && imgW <= 900 ) {
 			newSrc = img.attr("data-lrg");
+		} else {
+			newSrc = img.attr("data-xlg");
 		}
 		// IS NEW SRC DIFFERENT: RENDER 
+		// console.log( 306, newSrc, currSrc, newSrc.localeCompare(currSrc) );
 		if ( newSrc !== currSrc ) {
 			viewPage.imageRender( img, newSrc );
-		} 
+		}
 	},
 
-	sectionCheck: function () {
+	sectionCheck: function ( click ) {
+		
+		console.log( "controllerPage.sectionCheck" ); 
+
+		// IF CLICKED SECTION DOES NOT EQUAL CURRENT
+		if ( parseInt( $(click.target).parents("section").attr("data-content") ) !== controllerPage.getCurrent() ) {
+			if ( $.isNumeric( parseInt( $(click.target).parents("section").attr("data-content") ) ) ) {
+				controllerPage.navToSection( parseInt( $(click.target).parents("section").attr("data-content") ) );
+			}
+		}	
+
+	},
+
+	sectionCheckBind: function () {
 	
+		console.log("controllerPage.sectionCheckBind"); 
+
 		$("section").on( "click", function( click ){
 			
-			// IF NOT MENU
-			if ( !$(click.target).parents("#bottom_header_unfixed") ) {
-	
-				console.log( "controllerPage.sectionCheck", $(click.target) ); 
+			// IF NOT MOBILE
+			if ( !$("body").hasClass("mobile") ) {
 
-				// IF CLICKED SECTION DOES NOT EQUAL CURRENT
-				if ( parseInt( $(click.target).parents("section").attr("data-content") ) !== controllerPage.getCurrent() ) {
-					if ( $.isNumeric( parseInt( $(click.target).parents("section").attr("data-content") ) ) ) {
-						controllerPage.navToSection( parseInt( $(click.target).parents("section").attr("data-content") ) );
-					}
-				}	
+				// IF NOT MENU
+				if ( $(click.target).parents("#bottom_header_unfixed").length === 0 ) {
+
+					controllerPage.sectionCheck( click );
+
+				} 
 
 			}
 	
@@ -341,6 +361,7 @@ var viewPage = {
 		}, 500 );
 
 		this.touchInit();
+		controllerMobile.touchScreenCheck();
 		this.navInit();
 		// LOAD SECTION 2
 		this.contentReveal( $("#section_2") );
@@ -349,13 +370,13 @@ var viewPage = {
 
 	contentReveal: function ( target ) {
 
-		if ( typeof target !== 'undefined' ) {
-			target.show().addClass("loaded");
-			// imageManager();
-		} else {
-			$(".current").next().show().addClass("loaded");
-			// imageManager();
+		console.log("viewPage.contentReveal", target);
+
+		if ( typeof target === 'undefined' ) {
+			target = $(".current").next();
 		}
+		target.show().addClass("loaded");
+		controllerPage.imageManager( target );
 		
 	},
 
@@ -432,15 +453,13 @@ var viewPage = {
 		if ( !timerRunning ) {
 			navInterval = setInterval( function(){
 				timerRunning = true;
-				console.log( 445, navInterval );
+				// console.log( 445, navInterval );
 				controllerPage.navFixManager();
 				
 				viewPage.navHighlight();
 
 			}, 100 );
 		}
-
-
 
 		// ADD WHEEL_BLOCK CLASS
 		controllerPage.toggleWheelBlock();
@@ -546,27 +565,37 @@ var viewPage = {
 
 		$("#bottom_header a").on("click", function(e){
 			e.preventDefault();
-			viewPage.navClickHandler( $(this).data("id") );
+			if ( !$("body").hasClass("mobile") ) {
+				viewPage.navClickHandler( $(this).data("id") );
+			} else {
+				controllerMobile.navClickHandler( $(this).data("id") );
+			}	
+			
 		});
 
 	},
 
 	navClickHandler: function ( targetId ) {
 
-		// if ( $("body").hasClass("mobile") ) {
-		// 	// IF TOUCH
-		// 	navClickMobile( targetId );
-		// }
+		if ( !controllerPage.clickBlock ) {
 
-		console.log("navClickHandler");
+			console.log("navClickHandler");
 
-		// IF TARGET IS VISIBLE
-		if ( targetId === controllerPage.getCurrent() ) {
-			// SCROLL TO TOP OF CURRENT
-			$(".current").animate({ scrollTop: 0 }, 500 );
-		// ELSE NAV TO SECTION
-		} else {
-			controllerPage.navToSection( targetId );
+			controllerPage.clickBlock = true;
+
+			// IF TARGET IS VISIBLE
+			if ( targetId === controllerPage.getCurrent() ) {
+				// SCROLL TO TOP OF CURRENT
+				$(".current").animate({ scrollTop: 0 }, 500 );
+			// ELSE NAV TO SECTION
+			} else {
+				controllerPage.navToSection( targetId );
+			}
+
+			setTimeout( function(){
+				controllerPage.clickBlock = false;
+			}, 1000 );
+
 		}
 	
 	},
@@ -613,11 +642,13 @@ var viewPage = {
 
 	imageRender: function ( image, src ) {
 
+		console.log("viewPage.imageRender");
+
 		// IF BG IMAGE
 		if ( image.hasClass("bg_image") ) {
-			var bgSrc = "url('"+ src +"')";
+			var bgSrc = "url('" + src + "')";
 			image.css({
-				"background-image" : src 
+				"background-image" : bgSrc 
 			});
 		} else {
 			image.attr("src",src);

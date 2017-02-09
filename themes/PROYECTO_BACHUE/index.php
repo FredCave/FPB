@@ -15,7 +15,7 @@
 				<div id="bottom_header" class="header">
 					<!-- IMAGE -->
 					<span id="main_logo" class="">
-						<a href="" data-id="1"><img src="<?php bloginfo( 'template_url' ); ?>/img/logo.svg" /></a>
+						<a href="" data-id="1"><img class="main_logo" src="<?php bloginfo( 'template_url' ); ?>/img/logo.svg" /></a>
 					</span>
 					<ul>
 

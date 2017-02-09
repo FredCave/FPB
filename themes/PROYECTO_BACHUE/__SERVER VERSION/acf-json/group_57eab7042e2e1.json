@@ -21,6 +21,24 @@
             "media_upload": 1
         },
         {
+            "key": "field_588901f589d0f",
+            "label": "Text English",
+            "name": "exhibition_text_en",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1
+        },
+        {
             "key": "field_57eab7399f808",
             "label": "Images",
             "name": "exhibition_images",
@@ -99,5 +117,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1475000161
+    "modified": 1485373891
 }

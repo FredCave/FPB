@@ -2,6 +2,8 @@
 
 <div id="la-coleccion" class="wrapper">
 
+	<h2><?php the_trad("trad_coll",$trads); ?></h2>
+
 	<!-- PASSWORD FORM -->
 	<div id="coll_password" class="">
 		<?php echo pb_password_form( $trads ); ?>

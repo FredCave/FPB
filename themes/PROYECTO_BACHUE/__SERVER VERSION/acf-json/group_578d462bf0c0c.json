@@ -3,6 +3,42 @@
     "title": "About",
     "fields": [
         {
+            "key": "field_5888fa4eb9dde",
+            "label": "Main Text",
+            "name": "about_text",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1
+        },
+        {
+            "key": "field_5888fa32b9ddd",
+            "label": "Main Text English",
+            "name": "about_text_en",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1
+        },
+        {
             "key": "field_578d463263260",
             "label": "Main Image",
             "name": "about_image",
@@ -43,6 +79,7 @@
     "instruction_placement": "label",
     "hide_on_screen": [
         "permalink",
+        "the_content",
         "excerpt",
         "custom_fields",
         "discussion",
@@ -59,5 +96,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1468876367
+    "modified": 1485372000
 }

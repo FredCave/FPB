@@ -55,3 +55,5 @@
 		// FACEBOOK
 
 	</script>
+
+	<!--<div id="mobile_console"><p>No delta.</p></div>-->

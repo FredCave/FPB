@@ -79,8 +79,14 @@ var controllerSections = {
 			// SET NUMBER OF COLUMNS
 			if ( $(window).width() <= 500 ) {
 				$(this).attr("data-col", 1 );
+
+				console.log( 83, "1 col" );
+
 			} else if ( $(window).width() > 500 && $(window).width() <= 900 ) {
 				$(this).attr("data-col", 2 );
+
+				console.log( 88, "2 cols" );
+
 			}
 
 			controllerSections.gridReset( $(this) );
@@ -232,6 +238,9 @@ var viewSections = {
 		target.parents(".list").css( "height", thisH );
 		setTimeout( function(){
 			target.parents(".list").css( "height", "auto" );
+
+			console.log( 242, targetTop );
+
 			// SCROLL TO SELECTED POST
 			parent.animate({ scrollTop : targetTop - scrollOffset - 35 }, 500 ); 
 		}, 750 );
@@ -242,15 +251,18 @@ var viewSections = {
 
 		console.log("controllerSections.bannerOpen");
 
+		// NEED TO APPLY SECTION CHECK HERE
+		controllerPage.sectionCheck( click );
+
 		var thisId = click.data("link");
-		// SCROLL TO TOP
-		viewPage.currentScrollToTop();
 		// MAIN REVEAL FUNCTION
-		this.bannerReveal( $("#" + thisId) );
+		if ( !$("body").hasClass("mobile") ) {
+			this.bannerReveal( $("#" + thisId) );			
+		} else {
+			controllerMobile.bannerReveal( $("#" + thisId) );
+		}
 		// // OPEN ANY IFRAMES
 		// viewSections.openIframes( click.parents("section") );
-		// // CALCULATE IMAGE SIZES		
-		// controllerPage.imageManager( click.parents("section") );	
 
 	},
 

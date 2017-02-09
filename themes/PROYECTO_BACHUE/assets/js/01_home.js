@@ -9,25 +9,30 @@ function onYouTubeIframeAPIReady() {
 	console.log("onYouTubeIframeAPIReady");
 	
 	// GET VIDEO ID
-	var vidId = $("#player").attr("data-id"),
-		player = new YT.Player("player", {
-			height: '390',
-			width: '640',
-			videoId: vidId,
-			events: {
-				'onReady': controllerHome.onPlayerReady,
-				'onStateChange': controllerHome.onPlayerStateChange,
-				'onError': controllerHome.onPlayerError
-			},
-			playerVars: {
-	        	playlist: vidId,
-	        	loop: 1
-	      	}
-		});
+	var target = $("#player"),
+		vidId = target.attr("data-id"),
+		vidSrc = target.attr("data-src"), 
+		vidOrigin = target.attr("data-origin");
+
+		// SET SRC
+	var newSrc = vidSrc.split("?")[0] + "?enablejsapi=1&origin=" + vidOrigin;
+		target.attr( "src", newSrc );
+
+	player = new YT.Player("player", {
+		events: {
+			'onReady': controllerHome.onPlayerReady,
+			'onStateChange': controllerHome.onPlayerStateChange,
+			'onError': controllerHome.onPlayerError
+		},
+		playerVars: {
+        	playlist: vidId,
+        	loop: 1
+      	}
+	});
 
 	// BIND EVENTS
 	$("#home_video_button .pause").on("click", function(){
-		pauseVideo();
+		controllerHome.pauseVideo();
 	});
 
 }
@@ -36,7 +41,7 @@ var controllerHome = {
 
 	init: function () {
 
-		console.log("controllerHome.ifnit");
+		console.log("controllerHome.init");
 
 		// IF VIDEO VISIBLE
 		if ( $("#player").length ) {
@@ -110,6 +115,9 @@ var controllerHome = {
 	onPlayerError: function (argument) {
 		
 		console.log("onPlayerError");
+
+		// HIDE VIDEO
+		// $("#home iframe").hide();
 
 	},
 

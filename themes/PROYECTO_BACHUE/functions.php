@@ -148,6 +148,10 @@ function section_load () {
 
 // IMAGE OBJECT
 
+    // ADD CUSTOM IMAGE SIZES
+add_theme_support( 'post-thumbnails' );
+add_image_size( 'extralarge', 1400, 1400 );
+
 function pb_image_object( $image, $added_class ) {
     if( !empty($image) ): 
         $width = $image['sizes'][ 'thumbnail-width' ];
@@ -155,6 +159,7 @@ function pb_image_object( $image, $added_class ) {
         $thumb = $image['sizes'][ "thumbnail" ]; // 300
         $medium = $image['sizes'][ "medium" ]; // 600
         $large = $image['sizes'][ "large" ]; // 900
+        $extralarge = $image['sizes'][ "extralarge" ]; // 1400
         // $full = $image['url'];
         $id = $image["id"];
         
@@ -163,7 +168,7 @@ function pb_image_object( $image, $added_class ) {
             $class = "portrait";
             $thumb = $image['sizes'][ "medium" ];
             $medium = $image['sizes'][ "large" ];
-            $large = $image['url']; 
+            $large = $image['sizes'][ "extralarge" ]; 
             // FIX THIS – ADD EXTRA LARGE CUSTOM SIZE
         } 
 
@@ -174,7 +179,8 @@ function pb_image_object( $image, $added_class ) {
         data-thm='" . $thumb . "' 
         data-med='" . $medium . "' 
         data-lrg='" . $large . "' 
-        src=' " . $thumb . "' />";
+        data-xlg='" . $extralarge . "' 
+        src='" . $thumb . "' />";
     endif;
 }
 
@@ -186,6 +192,7 @@ function pb_bg_image_object( $image, $added_class ) {
         $thumb = $image['sizes'][ "thumbnail" ]; // 300
         $medium = $image['sizes'][ "medium" ]; // 600
         $large = $image['sizes'][ "large" ]; // 900
+        $extralarge = $image['sizes'][ "extralarge" ]; // 1400
         $id = $image["id"];
         
         $class = "landscape"; 
@@ -193,13 +200,14 @@ function pb_bg_image_object( $image, $added_class ) {
             $class = "portrait";
             $thumb = $image['sizes'][ "medium" ];
             $medium = $image['sizes'][ "large" ];
-            $large = $image['url']; 
+            $large = $image['sizes'][ "extralarge" ]; ; 
             // FIX THIS – ADD EXTRA LARGE CUSTOM SIZE
         } ?>
         <div 
             data-thm="<?php echo $thumb; ?>"
             data-med="<?php echo $medium; ?>" 
             data-lrg="<?php echo $large; ?>" 
+            data-xlg="<?php echo $extralarge; ?>" 
             data-ratio="<?php echo $ratio; ?>"  
             data-src="<?php echo $thumb; ?>" 
             class="<?php echo $class . " bg_image " . $added_class ?>" 

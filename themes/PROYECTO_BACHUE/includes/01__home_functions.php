@@ -24,7 +24,13 @@ function pb_get_link ( $internal ) {
 }
 
 function pb_home_html_video ( $src, $_id ) { ?>
-	<div id="player" data-src="<?php echo $src; ?>" data-id="<?php echo $_id; ?>"></div>
+	<!--<div id="player" data-src="<?php echo $src; ?>" data-id="<?php echo $_id; ?>"></div>-->
+	<iframe id="player" type="text/html" width="640" height="390" sandbox="allow-same-origin" 
+		data-src="<?php echo $src; ?>" 
+		data-id="<?php echo $_id; ?>" 
+		data-origin="<?php echo str_replace( "http", "https", get_bloginfo('url') ); ?>" 
+		src=""  
+		frameborder="0"></iframe>
 	<div id="home_video_button">
 		<div class="play hide"><img src="<?php bloginfo('template_url'); ?>/img/play.svg" /></div>
 		<div class="pause"><img src="<?php bloginfo('template_url'); ?>/img/pause.svg" /></div>
@@ -39,8 +45,8 @@ function pb_home_html_images ( $rows ) { ?>
 			</li>
 		<?php $i++; } ?>
 	</ul>
-	<div id="left_arrow" class="arrow"><a href=""><img src="<?php bloginfo('template_url'); ?>/img/slide_arrow.svg" /></a></div>
-	<div id="right_arrow" class="arrow"><a href=""><img src="<?php bloginfo('template_url'); ?>/img/slide_arrow.svg" /></a></div>
+	<div id="left_arrow" class="arrow"><a href=""><img class="arrow_img" src="<?php bloginfo('template_url'); ?>/img/slide_arrow.svg" /></a></div>
+	<div id="right_arrow" class="arrow"><a href=""><img class="arrow_img" src="<?php bloginfo('template_url'); ?>/img/slide_arrow.svg" /></a></div>
 <?php }
 
 function pb_home_html_text ( $internal, $external, $trads ) { ?>
@@ -58,20 +64,22 @@ function pb_get_home ( $trads ) {
 	if ( $about_query->have_posts() ) :
 		while ( $about_query->have_posts() ) : $about_query->the_post();
 			// IF HAVE VIDEO
-			if ( get_field( "home_video" ) ) {
+			// if ( get_field( "home_video" ) ) {
 					// GET IFRAME HTML
-					$iframe = get_field("home_video");
-					// FIND IFRAME SRC + ID
-					preg_match('/src="(.+?)"/', $iframe, $matches);
-					$src = $matches[1];
-					$video_id = explode("embed/",$src)[1];
-					$_id = explode("?",$video_id)[0];
-					// EXTRA PARAMS ADDED VIA YOUTUBE API
-				// ECHO HTML 
-				pb_home_html_video( $src );
+				// 	$iframe = get_field("home_video");
+				// 	// FIND IFRAME SRC + ID
+				// 	preg_match('/src="(.+?)"/', $iframe, $matches);
+				// 	$src = $matches[1];
+				// 	$video_id = explode("embed/",$src)[1];
+				// 	$_id = explode("?",$video_id)[0];
+				// 	// EXTRA PARAMS ADDED VIA YOUTUBE API
+				// // ECHO HTML 
+				// pb_home_html_video( $src );
+				// the_field("home_video");
 
 			// ELSE SLIDESHOW
-			} else if ( get_field( "home_images" ) ) {
+			// } else if ( get_field( "home_images" ) ) {
+			if ( get_field( "home_images" ) ) {
 				// GET ALL ROWS
 				$rows = get_field( "home_images" );
 				shuffle($rows);

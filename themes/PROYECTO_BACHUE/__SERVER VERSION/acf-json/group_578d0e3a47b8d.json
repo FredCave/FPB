@@ -21,6 +21,24 @@
             "media_upload": 1
         },
         {
+            "key": "field_588ae7f27e8e6",
+            "label": "Text English",
+            "name": "home_text_en",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1
+        },
+        {
             "key": "field_580f2a3cb32ac",
             "label": "Internal Link",
             "name": "home_internal",
@@ -159,5 +177,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1478190254
+    "modified": 1485498298
 }

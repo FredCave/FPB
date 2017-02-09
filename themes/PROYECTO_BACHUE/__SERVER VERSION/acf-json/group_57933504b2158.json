@@ -129,6 +129,24 @@
             "media_upload": 1
         },
         {
+            "key": "field_5889023ffc4bb",
+            "label": "Text English",
+            "name": "coll_text_en",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1
+        },
+        {
             "key": "field_57a10dfe76bb8",
             "label": "Exhibitions",
             "name": "coll_exhibitions",
@@ -181,5 +199,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1470172680
+    "modified": 1485373969
 }
