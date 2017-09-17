@@ -5,6 +5,7 @@ function pb_archive_filter ( $trads ) { ?>
 		<?php	
 		$terms = get_terms( array (
 		    'taxonomy' => 'archive-cat',
+		    'hide_empty' => true,
 		    'exclude'  => 1 // UNCATEGORIZED
 		) ); 
 		echo "<select><option value='0' selected>";
@@ -50,8 +51,12 @@ function pb_get_archive () {
 	if ( $news_query->have_posts() ) :
 		while ( $news_query->have_posts() ) : $news_query->the_post(); 
 			// GET CATEGORIES
-			$cat = get_the_terms( $post->ID, "archive-cat" );
-			echo '<li class="archive_post image_cell" data-cat="' . $cat[0]->term_id . '">';
+			$cats = get_the_terms( $post->ID, "archive-cat" );
+			$cat_array = [];
+			foreach ($cats as $cat) {
+				array_push( $cat_array, $cat->term_id );
+			}
+			echo '<li class="archive_post image_cell" data-cat="' . join( ' ', $cat_array ) . '">';
 
 				// ECHO IMAGE HTML
 				pb_archive_html_image();

@@ -42,6 +42,10 @@ function pb_home_html_images ( $rows ) { ?>
 		<?php $i = 0; foreach ( $rows as $row ) { ?>
 			<li class="home_single_image <?php if ( $i === 0 ) { echo "visible"; } ?>">
 				<?php pb_bg_image_object( $row["home_image"], "blurred" ); ?>
+				<?php // IF CAPTION
+				if ( !empty( $row["home_caption"] ) ) { ?>
+					<span class="home_caption"><?php echo $row["home_caption"]; ?></span>	
+				<?php } ?>	
 			</li>
 		<?php $i++; } ?>
 	</ul>
@@ -50,13 +54,15 @@ function pb_home_html_images ( $rows ) { ?>
 <?php }
 
 function pb_home_html_text ( $internal, $external, $trads ) { ?>
-	<li class="home_text" data-link="<?php echo pb_get_link( $internal, $external ); ?>" data-left="" data-top="">
+	<div class="home_text_wrapper">
 		<div class="home_close"></div>
-		<span><?php the_trad_field( "home_text" ); ?></span>
-		<div class="text_link">
-			<a target="_blank" href="<?php if ( get_field('home_external') ) { the_field('home_external'); } ?>"><?php the_trad("trad_more",$trads); ?></a>
-		</div>
-	</li>	
+		<li class="home_text" data-link="<?php echo pb_get_link( $internal, $external ); ?>" data-left="" data-top="">
+			<span><?php the_trad_field( "home_text" ); ?></span>
+			<div class="text_link">
+				<a target="_blank" href="<?php if ( get_field('home_external') ) { the_field('home_external'); } ?>"><?php the_trad("trad_more",$trads); ?></a>
+			</div>
+		</li>	
+	</div>
 <?php }
 
 function pb_get_home ( $trads ) {

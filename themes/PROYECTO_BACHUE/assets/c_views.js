@@ -324,8 +324,12 @@ var viewSections = {
 	textInit: function () {
 
 		if ( $(window).width() > 500 ) {
-			// GET WIDTH OF TEXT BLOCK
-			var textW = $(".home_text").css("width"); // IN PIXELS
+			// GET WIDTH + HEIGHT OF TEXT BLOCK
+			var textW = $(".home_text").css("width"), // IN PIXELS
+				textH = $(".home_text").height();
+
+			console.log( 331, textW, textH );
+
 			// CALC RANDOM LEFT PERCENTAGE
 			var leftPos = Math.random() * ( 1 - ( parseInt(textW) / $(window).width() ) ) * 100,
 				topPos = Math.floor( Math.random() * 62 ) + 5;

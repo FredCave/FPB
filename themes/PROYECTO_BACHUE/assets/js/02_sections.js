@@ -11,6 +11,7 @@ var controllerSections = {
 		viewCollection.passwordInit();
 		this.bannerBind();
 		this.gridInit();
+		this.archiveInit();
 
 	},
 
@@ -27,21 +28,24 @@ var controllerSections = {
 
 	archiveInit: function () {
 
-		$(document).on( "change", "#archive_filter select", function(e) {
-			e.preventDefault();
+		$("#archive_filter select").on( "change", function(e) {
+			// e.preventDefault();
 			// GET VALUE
 			var selec = $(this).val();
+			
 			console.log( 52, selec );
+			
 			// GRID RESET
 			var grid = $(this).parents(".filter_wrapper").next(".image_grid");
-			gridReset( grid );
-			archiveFilter( selec );
-			gridManager();
+			controllerSections.archiveFilter( selec );
+			controllerSections.gridInit();
 		});
 
 	},
 
 	archiveFilter: function ( value ) {
+
+		console.log("controllerSections.archiveFilter");
 
 		if ( value === "0" ) {
 			// SHOW ALL POSTS
@@ -50,7 +54,11 @@ var controllerSections = {
 			// HIDE ALL POSTS
 			$(".archive_post").hide().addClass("hidden");
 			// SHOW ONLY POSTS WITH ID
-			$("[data-cat=" + value + "]").show();		
+			$(".archive_post").each( function() {
+				if ( $(this).attr('data-cat').indexOf(value) > -1 ) {
+			        $(this).show();
+			    }
+			});	
 		}
 
 	},
@@ -64,7 +72,7 @@ var controllerSections = {
 			controllerSections.gridOpen( $(this) );
 		});
 
-		$(".grid_close").on( "click", function(){
+		$(".image_grid").on( "click", ".grid_close", function(){
 			controllerSections.gridClose( $(this) );
 		});
 
@@ -78,11 +86,13 @@ var controllerSections = {
 			
 			// SET NUMBER OF COLUMNS
 			if ( $(window).width() <= 500 ) {
+				cols = 1;
 				$(this).attr("data-col", 1 );
 
 				console.log( 83, "1 col" );
 
 			} else if ( $(window).width() > 500 && $(window).width() <= 900 ) {
+				cols = 2;
 				$(this).attr("data-col", 2 );
 
 				console.log( 88, "2 cols" );
@@ -92,6 +102,8 @@ var controllerSections = {
 			controllerSections.gridReset( $(this) );
 			// LOOP THROUGH CELLS 
 			$(this).find(".image_cell").not(".hidden").each( function(){
+
+				// console.log( 104, "Cell count: ", count, "Total cells: ", totalCells, "Cols: ",  cols );
 
 				$(this).attr( "data-row", row );
 				// IF END OF THE ROW OR IF LAST CELL
@@ -125,17 +137,19 @@ var controllerSections = {
 
 	gridOpen: function ( click ) {
 
-		console.log("controllerSections.gridOpen");
+		console.log( 136, click.parents("#coll_list").length );
 
-		// IF WINDOW IS WIDER THAN 500PX
-		if ( $(window).width() > 500 ) {
+		// IF NOT IN COLLECTION AND WINDOW IS WIDER THAN 500PX  
+		if ( $(window).width() > 500 || click.parents("#coll_list").length > 0 ) {
+
+			console.log("controllerSections.gridOpen");
 
 			var grid = click.parents(".image_grid"),
 				img = click.find("img"),
 				rowNo = click.parents("li").attr("data-row"),
 				nextLarge = grid.find(".row_" + rowNo),
-				nextWrapper = nextLarge.find(".image_wrapper"),
-				firstTime = true;	
+				nextWrapper = nextLarge.find(".image_wrapper");
+			// 	firstTime = true;	
 
 			// CLOSE OTHER IMAGES IN GRID
 			viewSections.closeImagesInGrid( grid );
@@ -143,30 +157,33 @@ var controllerSections = {
 			// SCROLL TO OPENED IMAGE (AFTER DELAY FOR CLOSING ANIMATION)			
 			viewPage.scrollToTarget( nextLarge, 1000 );
 
-			if ( firstTime ) {
-				// FIRST APPEND CONTENT
+			// WHAT IS THIS??????
+			// if ( firstTime ) {
+			
+			// COLLECTION
+			if ( click.parents("#coll_list").length ) {
 				click.find(".hidden_content").clone().removeClass("hide").appendTo( nextWrapper );
-				firstTime = false;
+			} else {
+				img.clone().appendTo( grid.find( ".row_" + rowNo + " .image_wrapper" ) );
 			}
 
-			// CALCULATE HEIGHT
-			if ( click.parents("#coll_list").length ) {
+			// 	firstTime = false; }
 
+			// CALCULATE HEIGHT OF FOLLOWING GRID_LARGE
+			if ( click.parents("#coll_list").length ) {
 				var img = nextLarge.find(".hidden_content"),
 					largeH = nextLarge.find(".hidden_content").height(),
 					rowNo = click.attr("data-row");
-
 			} else {
-				var largeH = parseInt( img.attr("height") ) / parseInt( img.attr("width") ) * parseInt( grid.width() ) * 0.9,
-					rowNo = click.parents("li").attr("data-row");
-				
+				var largeH = parseInt( img.attr("height") ) / parseInt( img.attr("width") ) * parseInt( grid.width() ),
+					rowNo = click.parents("li").attr("data-row");			
 				if ( img.hasClass("portrait") ) {
-					largeH = largeH * 0.67 + 24;
+					largeH = largeH * 0.67;
 				} 
 			}
+			nextLarge.css({"height" : largeH + 28 });
 
-			// GIVE HEIGHT TO FOLLOWING GRID_LARGE
-			nextLarge.css({"height" : largeH});
+			console.log( 182, largeH );
 
 			// RUN IMAGE RESIZE
 			controllerPage.imageCalc( nextLarge.find( "img" ) );

@@ -208,22 +208,64 @@ var viewHome = {
 
 	textInit: function () {
 
+		console.log("viewHome.textInit");
+
 		if ( $(window).width() > 500 ) {
-			// GET WIDTH OF TEXT BLOCK
-			var textW = $(".home_text").css("width"); // IN PIXELS
-			// CALC RANDOM LEFT PERCENTAGE
-			var leftPos = Math.random() * ( 1 - ( parseInt(textW) / $(window).width() ) ) * 100,
+
+			// GET WIDTH + HEIGHT OF TEXT BLOCK
+			var textW = $(".home_text_wrapper").css("width"), // IN PIXELS
+				textH = $(".home_text_wrapper").height(),
+				textTooHigh = false,
+				topPos;
+
+			console.log( 221, textH );
+
+			// IF textH > 0.65 OF WINDOW HEIGHT
+			if ( textH > 0.65 * $(window).height() ) {
+				// SET MAX HEIGHT
+				maxH = "50%";
+				overflow = "scroll";
+				textTooHigh = true;
+			} else {
+				maxH = "auto";
+				overflow = "auto";
+			}
+
+			// IF TEXT TOO HIGH:
+			if ( textTooHigh ) {
+				// GET MAX TOP POSITION OF TEXT BLOCK
+				var randNo = Math.random() * 25;
+				topPos = randNo + ( 40 / $(window).height() * 100 ); // 40 === TOP BANNER HEIGHT 		
+				console.log( 236, randNo, 40 / $(window).height() );		
+			} else {
 				topPos = Math.floor( Math.random() * 62 ) + 5;
-			$(".home_text").css({
+			}
+
+			console.log( 331, textH, topPos, textTooHigh );
+
+			// CALC RANDOM LEFT PERCENTAGE
+			var leftPos = Math.random() * ( 1 - ( parseInt(textW) / $(window).width() ) ) * 100;
+
+			$(".home_text_wrapper").css({
 				"left" : leftPos + "%",
-				"top" : topPos + "%"
+				"top" : topPos + "%",
+				"height" : maxH
 			}).fadeIn();
+			$(".home_text").css({
+				"overflow" : overflow	
+			});	
 		} else {
-			$(".home_text").fadeIn();		
+		
+			var textWrapperH = $(".home_text_wrapper").height();
+			$(".home_text").css({
+				"height" : textWrapperH,
+				"overflow" : "auto"
+			});
+			$(".home_text_wrapper").fadeIn();		
 		}
 		// BIND CLOSE FUNCTION
 		$(".home_close").on( "click", function(){
-			$(".home_text").hide();
+			$(".home_text_wrapper").hide();
 		});	
 		// BIND LINK FUNCTION
 		$(".text_link a").on( "click", function(e){

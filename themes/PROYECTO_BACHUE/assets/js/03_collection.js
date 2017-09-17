@@ -59,6 +59,23 @@ var controllerCollection = {
 
 	},
 
+	allFiltersReset: function ( select ) {
+
+		console.log("controllerCollection.allFiltersReset");
+
+		// IF SELECT: RESET SIBLING FILTERS
+		if ( select ) {
+
+		} else {
+			
+		}
+
+		
+
+		// CLEAR SEARCH	
+
+	},
+
 	textSearch: function ( input ) {
 
 		console.log("controllerCollection.textSearch", input);
@@ -66,9 +83,11 @@ var controllerCollection = {
 		// RESET GRID
 		controllerSections.gridReset( $("#coll_list") );
 
+		// RESET LETTERS
+		$("#coll_letters").find(".clicked").removeClass("clicked");
+
 		// RESET DROPDOWN FILTERS
-		$(".theme").prop('selectedIndex', 0);	
-		$(".type").prop('selectedIndex', 0);
+		$(".filter").find("select").prop('selectedIndex', 0);	
 
 		// LOOP THROUGH POSTS
 		var listItem = $(".coll_post");
@@ -105,6 +124,12 @@ var controllerCollection = {
 
 		console.log("controllerCollection.letterClick", click);
 
+		// RESET DROPDOWN FILTERS
+		$(".filter").find("select").prop('selectedIndex', 0);	
+
+		// RESET TEXT INPUT
+		$("#search_input")[0].value = "";
+
 		if ( click.parent().hasClass("active") ) {
 			var ltr = click.text().toLowerCase();
 			// HIDE ALL POSTS
@@ -129,10 +154,16 @@ var controllerCollection = {
 
 		var value = select.val();
 
-		// RESET SIBLING FILTERS
-		select.parents(".filter").siblings().find("select").prop('selectedIndex', 0);
 		// GRID RESET
 		controllerSections.gridReset( $("#coll_list") );
+
+		select.parents(".filter").siblings().find("select").prop('selectedIndex', 0);
+
+		// RESET LETTERS
+		$("#coll_letters").find(".clicked").removeClass("clicked");
+
+		// RESET TEXT INPUT
+		$("#search_input")[0].value = "";
 
 		if ( value === "0" ) {
 			console.log("Show all posts.");
@@ -162,6 +193,8 @@ var controllerCollection = {
 		
 	    // ADD DATA + FADE IN
         $("#coll_content").html( data );
+
+        controllerPage.imageManager( $("#section_6") );
  
 		controllerSections.gridInit();
         

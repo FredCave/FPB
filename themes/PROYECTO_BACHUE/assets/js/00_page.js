@@ -30,8 +30,8 @@ var controllerPage = {
 		controllerHome.init();
 		controllerSections.sectionsInit();
 		this.sectionCheckBind();
+		this.tradInit();
 		// TOUCH SCREEN CHECK IN VIEW PAGE
-		
 
 	},
 
@@ -285,11 +285,11 @@ var controllerPage = {
 			if ( $(window).width() / $(window).height() < parseInt( img.attr("data-ratio") ) ) {
 				imgW = $(window).height() * img.attr("data-ratio");
 			} else {
-				imgW = img.width();
+				imgW = $(window).width();
 			}
 		} else {
 			imgW = img.width();
-		}	
+		}
 		// CHANGE POINTS: THM = 300 / MED = 600 / LRG = 900
 		if ( imgW <= 300 ) {
 			newSrc = img.attr("data-thm");
@@ -339,6 +339,42 @@ var controllerPage = {
 			}
 	
 		});
+
+	},
+
+	tradInit: function () {
+
+		console.log("controllerPage.tradInit");
+
+		// BIND REVEAL CLICK
+
+		$("section").on("click", ".trad_default_reveal", function(e){
+
+			e.preventDefault();
+			controllerPage.tradDefaultReveal( e );
+
+		});
+
+	},
+
+	tradDefaultReveal: function ( click ) {
+
+		console.log("controllerPage.tradDefaultReveal", $(click.target) );
+
+		// CALCULATE HEIGHT OF CHILDREN
+		var childrenH = 0,
+			target = $(click.target).next(".trad_default_hidden");
+		target.children().each( function(){
+			childrenH += $(this).height();
+		});
+
+		$(click.target).hide().prev("p").hide();
+		// SET HEIGHT
+		target.css("height",childrenH);
+		// THEN SET TO AUTO
+		setTimeout( function(){
+			target.css("height","auto");
+		}, 1000);
 
 	}
 
@@ -411,6 +447,12 @@ var viewPage = {
 		console.log("viewPage.touchInit");
 
 		$("html,body").on("mousewheel wheel DOMMouseScroll", function(e){
+			// IF SCROLLING HOME TEXT BLOCK: RETURN
+			console.log( 451, e.target );
+			if ( $(e.target).parents(".home_text").length ) {
+				return;
+			}
+
 			if ( !$("#wrapper").hasClass("wheel_block") ) {
 				var delta = e.originalEvent.deltaY;
 				controllerPage.scrollManager(delta);
@@ -615,9 +657,6 @@ var viewPage = {
 			var targetTop = $(target).position().top + extraH,
 				offset = $("#top_header").outerHeight() + $("#bottom_header").outerHeight() + 20;
 			$(".current").animate( { scrollTop: targetTop - offset }, 500 );	
-
-			console.log( 590, targetTop, $(target).position().top, extraH );
-
 		}, delay );
 
 	},
@@ -669,9 +708,10 @@ var viewPage = {
 
 ************************************************/
 
-
 $(document).on("ready", function(){
+
 	controllerPage.pageInit();
+
 });
 
 

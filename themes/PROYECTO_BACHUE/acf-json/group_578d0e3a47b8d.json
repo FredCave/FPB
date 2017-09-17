@@ -140,6 +140,27 @@
                     "max_height": "",
                     "max_size": "",
                     "mime_types": ""
+                },
+                {
+                    "key": "field_58bc954186544",
+                    "label": "Caption",
+                    "name": "home_caption",
+                    "type": "text",
+                    "instructions": "",
+                    "required": "",
+                    "conditional_logic": "",
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": "",
+                    "readonly": 0,
+                    "disabled": 0
                 }
             ]
         }
@@ -177,5 +198,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1485498453
+    "modified": 1488754022
 }
